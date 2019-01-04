@@ -53,6 +53,16 @@ N.b. this is different to the `npm install` that Firebase Tools CLI asked if you
   * [Bugsnag](https://www.bugsnag.com/) is a great bug tracking library that will notify you via email when an error occurs on your site.
 * [Optional] Update Google Analytis ID in `public/index.html`
 
+## Development
+
+To run the application locally
+
+`yarn serve`
+
+To use local copies of Firebase cloud functions
+
+`firebase serve --only functions`
+
 ## Release history
 
 * 1.0.0
