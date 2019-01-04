@@ -20,14 +20,14 @@
   <v-footer :color="theme" app class="pl-2 pr-2 white--text">
     <v-layout xs-3 class="links-container">
       <div class="version" itemprop="softwareVersion">
-        <a class="white--text" href="https://github.com/bulkpinner/bulkpinner/blob/master/CHANGELOG.md" target="_blank" rel="nofollow noopener">Version {{this.applicationVersion}}</a>
+        <a class="white--text" href="https://github.com/denno020/linkslist/blob/master/CHANGELOG.md" target="_blank" rel="nofollow noopener">Version {{this.applicationVersion}}</a>
       </div>
       <div class="privacy-policy-link-container pl-2">
         <PrivacyDialog />
       </div>
     </v-layout>
     <v-layout xs-6 justify-center class="contact">
-      Suggestions or issues? Please open a <a class="white--text pl-1" target="_blank" href="https://github.com/denno020/linkslist/issues/new" rel="nofollow noopener">GitHub Issue</a>
+      Suggestions or issues? <a class="white--text pl-1" target="_blank" href="https://github.com/denno020/linkslist/issues/new" rel="nofollow noopener">Please open a GitHub Issue</a>
     </v-layout>
     <v-layout xs-3 justify-end class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="email" content="linkslistapp@gmail.com">
