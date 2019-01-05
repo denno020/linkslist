@@ -26,12 +26,14 @@
       </div>
       <v-flex pa-2 class="v-card__image-container">
         <v-img
+          v-if="this.image"
           :src="this.image"
           height="100%"
           width="100%"
           contain
           class="v-card__image"
         ></v-img>
+        <v-icon v-else :x-large="isOpen" class="v-card__image--not_found">image_search</v-icon>
       </v-flex>
       <v-flex xs12 layout align-center>
         <v-card-title primary-title>

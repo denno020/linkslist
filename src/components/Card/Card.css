@@ -81,3 +81,7 @@
 .v-card--dense .v-card__title {
     padding: 0;
 }
+.v-card__image--not_found {
+    width: 100%;
+    height: 100%;
+}

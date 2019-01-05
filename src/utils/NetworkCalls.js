@@ -17,6 +17,7 @@
  */
 
 import Vue from "vue";
+import metaScraper from 'meta-scraper';
 import Ajax from './Ajax';
 import store from '../store';
 import appConfig from '../../application-configuration';
@@ -45,11 +46,15 @@ export const getLinkId = async () => {
  * @returns {Object}
  */
 export const getUrlData = async (url) => {
-  // It would be better to move this to a Cloud Function, but it appears that the free tier doesn't allow network requests outside of Google
-  const response = await Vue.http.get(`//api.linkpreview.net/?key=5c261e5860dcbe8305639398f2f0c3d9cf3af2dd09aeb&q=${url}`);
-  const { body } = response;
+  const response = await metaScraper(`https://cors-anywhere.herokuapp.com/${url}`);
+  const { error = false, errorMessage = {}, description = false, image = false, title = false, og = false } = response;
 
-  return body;
+  return {
+    description: error ? errorMessage.message : description,
+    image: error ? false : image,
+    title: error ? 'Unable to preview link' : title,
+    url: og.url || url
+  };
 };
 
 /**
