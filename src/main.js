@@ -23,7 +23,8 @@ import Bugsnag from 'bugsnag-js';
 import VueBugsnag from 'vue-bugsnag';
 import './plugins/vuetify';
 import App from './App.vue';
-import store from './store'
+import store from './store';
+import appConfig from '../application-configuration';
 
 Vue.config.productionTip = false;
 
@@ -31,7 +32,10 @@ Bugsnag.apiKey = "{Enter Bugsnag API key}";
 
 Vue.use(VueResource);
 Vue.use(VueClipboard);
-Vue.use(VueBugsnag);
+
+if (appConfig.isLive) {
+  Vue.use(VueBugsnag);
+}
 
 new Vue({
   store,

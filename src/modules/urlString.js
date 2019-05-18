@@ -69,7 +69,8 @@ const actions = {
    */
   async fetchUrlString({ dispatch }) {
     const id = await getLinkId();
-    dispatch('urlString', id)
+    dispatch('urlString', id);
+    history.pushState({}, id, id);
   }
 };
 

@@ -19,6 +19,7 @@
 const isLive = window.location.hostname !== 'localhost';
 
 export default {
+  isLive,
   ...isLive && { // is production
     projectUrl: '{Enter Project URL}'
   } || { // is development
@@ -37,5 +38,5 @@ export default {
     "databaseURL": "{Enter databaseURL}",
     "projectId": "{Enter projectID}"
   },
-  version: '1.0.0'
+  version: '1.1.0'
 };
