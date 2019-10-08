@@ -16,27 +16,21 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const isLive = window.location.hostname !== 'localhost';
+import SVGIcon from '../SVGIcon/SVGIcon.vue';
 
 export default {
-  isLive,
-  ...isLive && { // is production
-    projectUrl: '{Enter Project URL}'
-  } || { // is development
-    projectUrl: 'http://localhost:8080/'
+  name: "HowToUseDialog",
+  components: {
+    SVGIcon
   },
-
-  ...isLive && { // is production
-    cloudFunctionsUrl: '{Enter Firebase cloud functions URL}'
-  } || { // is development
-    cloudFunctionsUrl: '{Enter URL for local Firebase Cloud Functions dev}'
+  data () {
+    return {
+      dialog: false
+    }
   },
-
-  firebase: {
-    "apiKey": "{Enter API key}",
-    "authDomain": "{Enter authDomain}",
-    "databaseURL": "{Enter databaseURL}",
-    "projectId": "{Enter projectID}"
-  },
-  version: '1.2.1'
-};
+  computed: {
+    theme() {
+      return this.$store.getters['ui/theme'];
+    }
+  }
+}

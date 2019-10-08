@@ -29,6 +29,9 @@ export default {
     },
     theme() {
       return this.$store.getters['ui/theme'];
+    },
+    isLoading() {
+      return this.$store.getters['ui/isGettingId'];
     }
   },
   methods: {

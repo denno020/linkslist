@@ -17,7 +17,7 @@
   -->
 
 <template>
-  <v-footer :color="theme" app class="pl-2 pr-2 white--text">
+  <v-footer :color="theme" app class="pl-2 pr-2 white--text" height="auto">
     <v-layout xs-3 class="links-container">
       <div class="version" itemprop="softwareVersion">
         <a class="white--text" href="https://github.com/denno020/linkslist/blob/master/CHANGELOG.md" target="_blank" rel="nofollow noopener">Version {{this.applicationVersion}}</a>

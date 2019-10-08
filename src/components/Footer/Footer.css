@@ -28,3 +28,17 @@
     transition: border-bottom linear 200ms;
     will-change: border-bottom;
 }
+
+@media (max-width: 720px) {
+    .v-footer {
+        flex-direction: column;
+    }
+}
+
+.links-container {
+    align-content: center;
+}
+
+.privacy-policy-link-container {
+    display: flex;
+}

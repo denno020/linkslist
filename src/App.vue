@@ -60,9 +60,13 @@
                 <Card :link="link" />
               </li>
             </ul>
-            <span v-else class="font-weight-light">
-              Enter URLs into the input box above
-            </span>
+            <div v-else class="empty-links-list">
+              <div class="empty-links-list__item font-weight-light">
+                Enter URLs into the input box above
+              </div>
+              <HowToUseDialog class="empty-links-list__item"/>
+              <FAQ class="empty-links-list__item"/>
+            </div>
           </v-layout>
         </v-layout>
       </v-container>

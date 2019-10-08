@@ -19,8 +19,10 @@
 import {
   Alerts,
   Card,
+  FAQ,
   Footer,
   GetLink,
+  HowToUseDialog,
   Toolbar,
   ViewContainer
 } from './components';
@@ -30,8 +32,10 @@ export default {
   components: {
     Alerts,
     Card,
+    FAQ,
     Footer,
     GetLink,
+    HowToUseDialog,
     Toolbar,
     ViewContainer
   },

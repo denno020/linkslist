@@ -34,7 +34,8 @@ const state = {
       icon: 'view_headline'
     }
   },
-  theme: THEME_LIGHT_BLUE
+  theme: THEME_LIGHT_BLUE,
+  isGettingId: false
 };
 
 /**
@@ -67,7 +68,7 @@ const mutations = {
    * This function will mainly be used to populate the UI state with values that have been saved in the DB or localStorage
    *
    * @param {Object} state   The slice of state that this module is responsible for
-   * @param {Object} payload Object containing the UI values that are going to be upated
+   * @param {Object} payload Object containing the UI values that are going to be updated
    *
    * @returns {null}
    */
@@ -76,6 +77,20 @@ const mutations = {
       ...state,
       ...payload
     };
+  },
+
+  /**
+   * Set isGettingId
+   *
+   * @param {Object} state   The slice of state that this module is responsible for
+   * @param {Object} payload Object container the value to update
+   *
+   * @returns {null}
+   */
+  isGettingId(state, payload) {
+    const { isGettingId } = payload;
+
+    state.isGettingId = isGettingId;
   }
 };
 
@@ -110,6 +125,19 @@ const actions = {
    */
   setUi({ commit }, payload) {
     commit('setUi', payload);
+  },
+
+  /**
+   * Set the flag for isGettingId, indicating if the application has requested an ID
+   *
+   * @param {Object} module
+   * @param {Object} payload              Object containing property value to update
+   * @param {Boolean} payload.isGettingId Flag indicating if the application is currently querying for URL ID
+   *
+   * @returns {null}
+   */
+  setIsGettingId({ commit }, payload) {
+    commit('isGettingId', payload);
   }
 };
 
@@ -126,7 +154,8 @@ const getters = {
     // This is the data that will be saved to Firebase DB/localStorage
     const {theme, viewMode} = getters;
     return { theme, viewMode };
-  }
+  },
+  isGettingId: state => state.isGettingId
 };
 
 // Module exports

@@ -31,3 +31,13 @@
     margin: 0;
     width: 100%;
 }
+
+.empty-links-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.empty-links-list__item {
+    margin-bottom: 20px;
+}

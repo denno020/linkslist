@@ -17,24 +17,8 @@
   -->
 
 <template>
-  <v-layout justify-center shrink>
-    <v-btn v-if="!urlString" :color="theme" class="white--text" @click="handleGetLink" :loading="isLoading">
-      <v-icon class="mr-2">link</v-icon>
-      Get link
-    </v-btn>
-    <div v-else>
-      <v-btn
-        flat
-        color="primary"
-        class="button--url"
-        v-clipboard:copy="url"
-        v-clipboard:success="copyToClipboard"
-      >
-        {{this.url}}
-      </v-btn>
-    </div>
-  </v-layout>
+  <img class="svg-icon" :src="getIcon()" alt="">
 </template>
 
-<script src="./GetLink.js"></script>
-<style scoped src="./GetLink.css"></style>
+<script src="./SVGIcon.js"></script>
+<style scoped src="./SVGIcon.css"></style>

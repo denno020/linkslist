@@ -16,27 +16,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const isLive = window.location.hostname !== 'localhost';
-
-export default {
-  isLive,
-  ...isLive && { // is production
-    projectUrl: '{Enter Project URL}'
-  } || { // is development
-    projectUrl: 'http://localhost:8080/'
-  },
-
-  ...isLive && { // is production
-    cloudFunctionsUrl: '{Enter Firebase cloud functions URL}'
-  } || { // is development
-    cloudFunctionsUrl: '{Enter URL for local Firebase Cloud Functions dev}'
-  },
-
-  firebase: {
-    "apiKey": "{Enter API key}",
-    "authDomain": "{Enter authDomain}",
-    "databaseURL": "{Enter databaseURL}",
-    "projectId": "{Enter projectID}"
-  },
-  version: '1.2.1'
-};
+.svg-icon {
+    height: 1.5em;
+}

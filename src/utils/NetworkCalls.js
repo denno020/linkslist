@@ -21,6 +21,8 @@ import metaScraper from 'meta-scraper';
 import Ajax from './Ajax';
 import store from '../store';
 import appConfig from '../../application-configuration';
+import Performance from './Performance';
+import Analytics from './Analytics';
 
 /**
  * NetworkCalls class that will contain all network requests that are made throughout the application
@@ -34,9 +36,19 @@ import appConfig from '../../application-configuration';
 export const getLinkId = async () => {
   const { links } = store.getters;
   const ui = store.getters['ui/ui'];
-  const response = await Ajax.post(`${appConfig.cloudFunctionsUrl}/getLink`, { links, ui });
-  const { body: { id } } = response;
+  Performance.mark('start_generating_id');
 
+  const response = await Ajax.post(`${appConfig.cloudFunctionsUrl}/getLink`, { links, ui });
+
+  Performance.mark('finish_generating_id');
+  Performance.measure('time_to_generate_id', 'start_generating_id', 'finish_generating_id');
+  const timing = Performance.getEntriesByName('time_to_generate_id');
+  if (timing !== false) {
+    const { duration } = timing[0];
+    Analytics.FireTiming('time_to_generate_id', Math.round(duration));
+  }
+
+  const { body: { id } } = response;
   return id;
 };
 

@@ -31,7 +31,7 @@ export default class Ajax {
     return Http.post(url, data);
   }
 
-  static put() {
+  static put(url, data) {
     return Http.put(url, data);
   }
 }

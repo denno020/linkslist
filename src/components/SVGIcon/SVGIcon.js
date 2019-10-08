@@ -16,27 +16,25 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const isLive = window.location.hostname !== 'localhost';
+import iconWink from './icons/wink.svg';
+import iconShush from './icons/shush.svg';
 
 export default {
-  isLive,
-  ...isLive && { // is production
-    projectUrl: '{Enter Project URL}'
-  } || { // is development
-    projectUrl: 'http://localhost:8080/'
+  name: "SVGIcon",
+  props: [
+    'icon'
+  ],
+  data () {
+    return {
+      icons: {
+        shush: iconShush,
+        wink: iconWink
+      }
+    }
   },
-
-  ...isLive && { // is production
-    cloudFunctionsUrl: '{Enter Firebase cloud functions URL}'
-  } || { // is development
-    cloudFunctionsUrl: '{Enter URL for local Firebase Cloud Functions dev}'
-  },
-
-  firebase: {
-    "apiKey": "{Enter API key}",
-    "authDomain": "{Enter authDomain}",
-    "databaseURL": "{Enter databaseURL}",
-    "projectId": "{Enter projectID}"
-  },
-  version: '1.2.1'
-};
+  methods: {
+    getIcon () {
+      return this.icons[this.icon];
+    }
+  }
+}

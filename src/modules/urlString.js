@@ -68,7 +68,9 @@ const actions = {
    * @returns {null}
    */
   async fetchUrlString({ dispatch }) {
+    dispatch('ui/setIsGettingId', { isGettingId: true });
     const id = await getLinkId();
+    dispatch('ui/setIsGettingId', { isGettingId: false });
     dispatch('urlString', id);
     history.pushState({}, id, id);
   }
