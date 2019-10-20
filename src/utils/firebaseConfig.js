@@ -16,9 +16,28 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import appConfig from '../../application-configuration';
+
 /**
- * FAQ Question/Answer
+ * @typedef {Object} FirebaseConfig
+ * @property {string} apiKey
+ * @property {string} authDomain
+ * @property {string} databaseURL
+ * @property {string} projectId
+ * @property {string} appId
  */
-export default {
-    name: "Question"
+
+/**
+ * Get the appropriate firebase config information, depending on whether live or local dev
+ *
+ * @returns {FirebaseConfig}
+ */
+function firebaseConfig() {
+  if (location.hostname === 'localhost') {
+    return appConfig.firebaseDev;
+  }
+
+  return appConfig.firebase;
 }
+
+export default firebaseConfig();

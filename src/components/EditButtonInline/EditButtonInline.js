@@ -16,9 +16,14 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * FAQ Question/Answer
- */
 export default {
-    name: "Question"
+  name: "EditButtonInline",
+  props: {
+    onClick: Function
+  },
+  computed: {
+    theme() {
+      return this.$store.getters['ui/theme'];
+    }
+  }
 }

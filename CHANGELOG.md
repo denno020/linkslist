@@ -1,3 +1,21 @@
+# 1.3.0
+
+### Features
+
+**Ability to colour code lists**
+
+Each list can now be given its own colour, to better help identify them
+
+**Ability to give the list a name and a description**
+
+Not only can the list's colour be changed for easy identification, its name *and* description can also be updated.
+
+To do this, hover your mouse over the "Links List" title, and then click on the pencil button that appears
+
+**Sync data to local storage**
+
+Some people had issues with their list being "forgotten" after they refreshed. To avoid those issues in the future, all changes to a list will be saved to local storage until a URL is generated, at which point it will be persisted in the database.
+
 # 1.2.1
 
 **Added a loading indicator while the app generates an ID**

@@ -1,4 +1,4 @@
-/*
+/*!
  *  Links List - Create a list of links, and then share it!
  *  Copyright (c) 2019 Luke Denton
  *
@@ -16,9 +16,19 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * FAQ Question/Answer
- */
-export default {
-    name: "Question"
+@import '../../assets/media-queries.scss';
+
+@include media-hide-toolbar-labels {
+  .change-theme__label {
+    display: none;
+  }
+}
+
+.change-theme__colour-swatches {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 20; // Needs to remain so the swatches are displayed over the list items too, not just the toolbar items
 }

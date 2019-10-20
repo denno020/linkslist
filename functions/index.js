@@ -26,7 +26,13 @@ const HttpStatus = require('http-status-codes');
 const moment = require('moment');
 const tables = require('./tables.json');
 
-admin.initializeApp();
+// Determine which Firebase app should be used
+if (process.env.NODE_ENV === 'development') {
+  const devFirebase = require('../firebase.development.json');
+  admin.initializeApp(devFirebase);
+} else {
+  admin.initializeApp();
+}
 
 /**
  * Generate a new ID for sharing the list
@@ -147,8 +153,8 @@ exports.syncData = functions.https.onRequest(async (request, response) => {
   }
 
   // Ensure the links parameter is set correctly
-  const { urlString, links } = request.body;
-  if (!urlString || !links) {
+  const { urlString, links, ui, meta } = request.body;
+  if (!urlString || !links || !ui || !meta) {
     response.status(HttpStatus.BAD_REQUEST).send();
     return;
   }
@@ -157,8 +163,11 @@ exports.syncData = functions.https.onRequest(async (request, response) => {
   const snapshot = await listsRef.orderByChild('id').equalTo(urlString).once('value');
   const dbVal = snapshot.val();
   const firebaseDbId = Object.keys(dbVal)[0];
+
   admin.database().ref(`/${tables.lists}/${firebaseDbId}`).update({
     links,
+    ui,
+    meta,
     updatedAt: getTodayString()
   });
 

@@ -16,30 +16,25 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ALERT_SUCCESS } from '../../constants';
+@import '../../assets/media-queries.scss';
 
-export default {
-  name: "GetLink",
-  computed: {
-    urlString() {
-      return this.$store.getters.urlString;
-    },
-    url () {
-      return `${this.$store.getters.projectUrl}${this.urlString}`;
-    },
-    theme() {
-      return this.$store.getters['ui/theme'];
-    },
-    isLoading() {
-      return this.$store.getters['ui/isGettingId'];
+.view-container {
+    height: 100%;
+}
+
+@include media-hide-toolbar-labels {
+    .view-container__label {
+        display: none;
     }
-  },
-  methods: {
-    handleGetLink() {
-      this.$store.dispatch('fetchUrlString');
-    },
-    copyToClipboard() {
-      this.$store.dispatch('alerts/displayAlert', { type: ALERT_SUCCESS, message: 'Copied to clipboard!' });
-    }
-  }
+}
+
+.view-container .v-btn-toggle {
+    background: none;
+    box-shadow: none;
+}
+.view-container .v-btn {
+    border: 0;
+}
+.view-container .v-btn--active::before {
+    background: none;
 }

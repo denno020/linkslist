@@ -16,9 +16,17 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * FAQ Question/Answer
- */
 export default {
-    name: "Question"
+    name: "ColourSwatches",
+    computed: {
+        swatches() {
+            return this.$store.getters['ui/colourSwatches']
+        }
+    },
+    methods: {
+        updateColor(colour) {
+            this.$store.dispatch('ui/setTheme', { theme: colour });
+            this.$store.dispatch('ui/toggleColourSwatches', { visible: false });
+        }
+    }
 }

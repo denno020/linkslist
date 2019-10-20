@@ -17,14 +17,30 @@
  */
 
 import LinkParse from '../utils/LinkParser';
+import { syncFirebaseDB } from "../utils/NetworkCalls";
+import Analytics from "../utils/Analytics";
+
+/**
+ * @typedef {Object} UserInputState
+ * @property {String} linkUrl
+ * @property {Array} links
+ * @property {string} listTitle
+ * @property {string} listDescription
+ * @property {Boolean} isEditingListTitle
+ * @property {Boolean} isEditingListDescription
+ */
 
 /**
  * Initial state
- * @type {Object}
+ * @type {UserInputState}
  */
 const state = {
   linkUrl: '', // The text that the user enters into the input box
-  links: [] // Array of links extracted from the user inputted text
+  links: [], // Array of links extracted from the user inputted text
+  listTitle: 'Links List',
+  listDescription: 'Simply create a list of links. Then share it!',
+  isEditingListTitle: false,
+  isEditingListDescription: false
 };
 
 /**
@@ -34,20 +50,70 @@ const state = {
  * @type {Object}
  */
 const mutations = {
-  linkUrl(state, payload) {
-    state.linkUrl = payload;
+  /**
+   * @param {Object} state   The slice of state that this module is responsible for
+   * @param {string} linkUrl
+   *
+   * @returns {null}
+   */
+  linkUrl(state, linkUrl) {
+    state.linkUrl = linkUrl;
   },
 
   /**
    * Set the parsed links array
    *
-   * @param {Object} state   The slice of state that this module is responsible for
-   * @param {array}  payload An array of links that have been extracted from the linkUrl string
+   * @param {Object} state The slice of state that this module is responsible for
+   * @param {Array}  links An array of links that have been extracted from the linkUrl string
    *
    * @returns {null}
    */
-  setLinks(state, payload) {
-    state.links = payload;
+  setLinks(state, links) {
+    state.links = links;
+  },
+
+  /**
+   * Set the title of the list
+   *
+   * @param {Object}  state    The slice of state that this module is responsible for
+   * @param {string}  listTitle The new title for the list
+   *
+   * @returns {null}
+   */
+  listTitle(state, listTitle) {
+    state.listTitle = listTitle;
+  },
+
+  /**
+   * Set the title of the list
+   *
+   * @param {Object} state           The slice of state that this module is responsible for
+   * @param {string} listDescription The new description for the list
+   *
+   * @returns {null}
+   */
+  listDescription(state, listDescription) {
+    state.listDescription = listDescription;
+  },
+
+  /**
+   * @param {Object}  state
+   * @param {Boolean} isEditingListTitle
+   *
+   * @returns {null}
+   */
+  isEditingListTitle(state, isEditingListTitle) {
+    state.isEditingListTitle = isEditingListTitle;
+  },
+
+  /**
+   * @param {Object}  state
+   * @param {Boolean} isEditingListTitle
+   *
+   * @returns {null}
+   */
+  isEditingListDescription(state, isEditingListDescription) {
+    state.isEditingListDescription = isEditingListDescription;
   }
 };
 
@@ -92,6 +158,92 @@ const actions = {
   parseLinkUrl({ state, commit }) {
     const links = LinkParse.parse(state.linkUrl);
     commit('setLinks', links);
+  },
+
+  /**
+   * @param {Object}   module
+   * @param {function}  module.commit     Function to call mutations on the module
+   * @param {Object}   payload
+   * @param {Object}    payload.listTitle The new title for the list
+   *
+   * @returns {null}
+   */
+  setListTitle({ commit }, payload) {
+    const { listTitle } = payload;
+    commit('listTitle', listTitle);
+  },
+
+  /**
+   * @param {Object}   module
+   * @param {function}  module.commit           Function to call mutations on the module
+   * @param {Object}   payload
+   * @param {Object}    payload.listDescription The new description for the list
+   *
+   * @returns {null}
+   */
+  setListDescription({ commit }, payload) {
+    const { listDescription } = payload;
+    commit('listDescription', listDescription);
+  },
+
+  /**
+   * @param {Object}   module
+   * @param {function}  module.commit     Function to call mutations on the module
+   * @param {Object}   payload
+   * @param {Boolean}   payload.isEditing The new description for the list
+   *
+   * @returns {null}
+   */
+  setIsEditingListTitle({ commit }, payload) {
+    const { isEditing } = payload;
+    commit('isEditingListTitle', isEditing);
+
+    // Assuming that isEditing === false when the user has finished updating the title
+    if (!isEditing) {
+      syncFirebaseDB();
+    }
+
+    Analytics.FireFeatureUsed('edit_title', isEditing);
+  },
+
+  /**
+   * @param {Object}   module
+   * @param {function}  module.commit     Function to call mutations on the module
+   * @param {Object}   payload
+   * @param {Boolean}   payload.isEditing The new description for the list
+   *
+   * @returns {null}
+   */
+  setIsEditingListDescription({ commit }, payload) {
+    const { isEditing } = payload;
+    commit('isEditingListDescription', isEditing);
+
+    // Assuming that isEditing === false when the user has finished updating the description
+    if (!isEditing) {
+      syncFirebaseDB();
+    }
+
+    Analytics.FireFeatureUsed('edit_description', isEditing);
+  },
+
+  /**
+   * Set the meta data for the links list, likely from Firebase DB
+   *
+   * @param {Object}   module
+   * @param {function}  module.commit     Function to call mutations on the module
+   * @param {Object}   payload
+   * @param {string}    payload.listTitle       The saved title for the list
+   * @param {string}    payload.listDescription The saved description for the list
+   */
+  setMeta({ commit }, payload) {
+    if (!payload) {
+      return;
+    }
+
+    Object.entries(payload).forEach((entry) => {
+      const [property, value] = entry;
+      commit(property, value);
+    })
   }
 };
 
@@ -102,7 +254,24 @@ const actions = {
  */
 const getters = {
   linkUrl: state => state.linkUrl,
-  links: state => state.links
+  links: state => state.links,
+  listTitle: state => state.listTitle,
+  listDescription: state => state.listDescription,
+  isEditingListTitle: state => state.isEditingListTitle,
+  isEditingListDescription: state => state.isEditingListDescription,
+  /**
+   * Get the data that will be saved to Firebase DB/localStorage
+   *
+   * @param {UserInputState} state
+   *
+   * @returns {{ listDescription: <string>, listTitle: <string> }}
+   */
+  getMeta: (state) => {
+    return {
+      listTitle: state.listTitle,
+      listDescription: state.listDescription
+    };
+  }
 };
 
 // Module exports

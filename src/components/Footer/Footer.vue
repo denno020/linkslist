@@ -32,7 +32,7 @@
     <v-layout xs-3 justify-end class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="email" content="linkslistapp@gmail.com">
       <span class="author-name">
-        Created by <span itemprop="name">Luke Denton</span>
+        Links List created by <span itemprop="name">Luke Denton</span>
       </span>
     </v-layout>
   </v-footer>

@@ -16,14 +16,26 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { VIEW_OPEN, VIEW_DENSE, THEME_LIGHT_BLUE } from '../constants';
+import { VIEW_OPEN, VIEW_DENSE } from '../constants';
+import { syncFirebaseDB } from "../utils/NetworkCalls";
+import Analytics from "../utils/Analytics";
+
+/**
+ * @typedef  {Object}  UIState
+ * @property {string}  viewMode
+ * @property {Object}  views
+ * @property {string}  theme
+ * @property {Array}   colourSwatches
+ * @property {Boolean} swatchesVisible
+ * @property {Boolean} isGettingId
+ */
 
 /**
  * Initial state
- * @type {Object}
+ * @type {UIState}
  */
 const state = {
-  selectedView: VIEW_OPEN,
+  viewMode: VIEW_OPEN,
   views: {
     VIEW_OPEN: {
       mode: VIEW_OPEN,
@@ -34,7 +46,32 @@ const state = {
       icon: 'view_headline'
     }
   },
-  theme: THEME_LIGHT_BLUE,
+  theme: "#2196F3", // Storing the actual HEX value which will allow for a possible custom colour in the future
+  // All available colours. The first colour will be the default colour shown in quick picker, with the rest shown after user clicks on "More..."
+  colourSwatches: [
+    "#F44336",
+    "#E91E63",
+    "#9C27B0",
+    "#673AB7",
+    "#3F51B5",
+    "#2196F3",
+    "#03A9F4",
+    "#00BCD4",
+    "#009688",
+    "#4CAF50",
+    "#8BC34A",
+    "#CDDC39",
+    "#FFEB3B",
+    "#FFC107",
+    "#FF9800",
+    "#FF5722",
+    "#795548",
+    "#607D8B",
+    "#9E9E9E",
+    "#000000",
+  ],
+  /** @var {Boolean} Indicates if the user is currently picking from the colour chooser */
+  swatchesVisible: false,
   isGettingId: false
 };
 
@@ -45,15 +82,14 @@ const state = {
  * @type {Object}
  */
 const mutations = {
-  selectedView(state, payload) {
-    const { viewMode } = payload;
-    state.selectedView = viewMode;
+  viewMode(state, viewMode) {
+    state.viewMode = viewMode;
   },
 
   /**
    * Set the theme
    *
-   * @param {Object} state   The slice of state that this module is responsible for
+   * @param {UIState} state   The slice of state that this module is responsible for
    * @param {Object} payload Object containing the theme to be set
    *
    * @returns {null}
@@ -67,22 +103,21 @@ const mutations = {
    * Set UI params
    * This function will mainly be used to populate the UI state with values that have been saved in the DB or localStorage
    *
-   * @param {Object} state   The slice of state that this module is responsible for
-   * @param {Object} payload Object containing the UI values that are going to be updated
+   * @param {UIState} state   The slice of state that this module is responsible for
+   * @param {Object} payload  Object containing the UI values that are going to be updated
    *
    * @returns {null}
    */
   setUi(state, payload) {
-    state = {
-      ...state,
-      ...payload
-    };
+    Object.keys(payload).forEach((property) => {
+      state[property] = payload[property];
+    });
   },
 
   /**
    * Set isGettingId
    *
-   * @param {Object} state   The slice of state that this module is responsible for
+   * @param {UIState} state   The slice of state that this module is responsible for
    * @param {Object} payload Object container the value to update
    *
    * @returns {null}
@@ -91,6 +126,18 @@ const mutations = {
     const { isGettingId } = payload;
 
     state.isGettingId = isGettingId;
+  },
+
+  /**
+   * Set swatchesVisible
+   *
+   * @param {UIState} state   The slice of state that this module is responsible for
+   * @param {Object} payload Object containing the value to update
+   */
+  swatchesVisible(state, payload) {
+    const { swatchesVisible } = payload;
+
+    state.swatchesVisible = swatchesVisible;
   }
 };
 
@@ -102,7 +149,11 @@ const mutations = {
  */
 const actions = {
   setViewMode({ commit }, payload) {
-    commit('selectedView', payload);
+    const { viewMode } = payload;
+    commit('viewMode', viewMode);
+    syncFirebaseDB();
+
+    Analytics.FireFeatureUsed('view_mode', viewMode);
   },
 
   /**
@@ -113,6 +164,9 @@ const actions = {
    */
   setTheme({ commit }, payload) {
     commit('theme', payload);
+    syncFirebaseDB();
+
+    Analytics.FireFeatureUsed('colour_swatches', 'selected');
   },
 
   /**
@@ -138,6 +192,22 @@ const actions = {
    */
   setIsGettingId({ commit }, payload) {
     commit('isGettingId', payload);
+  },
+
+  /**
+   * Toggle the swatchesVisible property
+   *
+   * @param {Object} module
+   * @param {Object} payload          Options object
+   * @param {Boolean} payload.visible [Optional] Force visibility on (true) or off (false). Leave undefined to toggle
+   *
+   * @returns {null}
+   */
+  toggleColourSwatches({ commit, state }, payload) {
+    const swatchesVisible = payload && typeof payload.visible !== 'undefined' ? payload.visible : !state.swatchesVisible;
+    commit('swatchesVisible', { swatchesVisible });
+
+    if (swatchesVisible) Analytics.FireFeatureUsed('colour_swatches', 'opened');
   }
 };
 
@@ -147,14 +217,16 @@ const actions = {
  * @type {Object}
  */
 const getters = {
-  viewMode: state => state.selectedView,
+  viewMode: state => state.viewMode,
   views: state => Object.values(state.views),
   theme: state => state.theme,
   ui: (state, getters) => {
     // This is the data that will be saved to Firebase DB/localStorage
-    const {theme, viewMode} = getters;
+    const { theme, viewMode } = getters;
     return { theme, viewMode };
   },
+  colourSwatches: state => state.colourSwatches,
+  swatchesVisible: state => state.swatchesVisible,
   isGettingId: state => state.isGettingId
 };
 

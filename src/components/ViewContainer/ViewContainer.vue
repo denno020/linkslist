@@ -28,4 +28,4 @@
 </template>
 
 <script src="./ViewContainer.js"></script>
-<style scoped src="./ViewContainer.css"></style>
+<style scoped lang="scss" src="./ViewContainer.scss"></style>

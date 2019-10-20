@@ -23,5 +23,3 @@ export const ALERT_SUCCESS = 'success';
 export const ALERT_INFO = 'info';
 export const ALERT_WARNING = 'warning';
 export const ALERT_ERROR = 'error';
-
-export const THEME_LIGHT_BLUE = 'light-blue darken-1';

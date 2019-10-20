@@ -25,8 +25,6 @@ import tables from '../../functions/tables.json';
 firebase.initializeApp(appConfig.firebase);
 
 export const listenForListChange = (urlString) => {
-  let firstLoad = true;
-
   firebase.database().ref(`/${tables.lists}`).orderByChild('id').equalTo(urlString).on('value', (snapshot) => {
     const updatedVal = snapshot.val();
 
@@ -36,14 +34,10 @@ export const listenForListChange = (urlString) => {
       return;
     }
 
-    const { links, ui } = Object.values(updatedVal)[0];
-    store.dispatch('setLinks', links);
+    const { links, ui, meta } = Object.values(updatedVal)[0];
 
-    if (firstLoad) {
-      // Only want to set the theme and view mode on initial page load
-      // This will prevent a users theme/view being changed if the DB entry for the list is updated
-      store.dispatch('ui/setUi', { ui });
-      firstLoad = false;
-    }
+    store.dispatch('setLinks', links);
+    store.dispatch('ui/setUi', ui);
+    store.dispatch('userInput/setMeta', meta)
   })
 };

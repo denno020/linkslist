@@ -41,7 +41,25 @@ export default new Vuex.Store({
   /**
    * These are required when wanting to do asynchronous actions as well, i.e. API call before updating state
    */
-  actions: {},
+  actions: {
+
+    /**
+     * Hydrate store state using locally stored data
+     *
+     * @param {Object}   module
+     * @param {Function}  module.dispatch Dispatch function that calls modules actions
+     * @param {Object}   storedState Stored state data
+     *
+     * @returns {null}
+     */
+    hydrateState({ dispatch }, storedState) {
+      const { links, ui, meta } = storedState;
+
+      dispatch('setLinks', links);
+      dispatch('ui/setUi', ui);
+      dispatch('userInput/setMeta', meta)
+    }
+  },
 
   /**
    * These are used to ensure all components get the same data, even if that data needs to be modified before being
@@ -50,5 +68,4 @@ export default new Vuex.Store({
   getters: {
     projectUrl: state => state.projectUrl
   }
-
 });

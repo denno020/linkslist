@@ -23,6 +23,7 @@ import store from '../store';
 import appConfig from '../../application-configuration';
 import Performance from './Performance';
 import Analytics from './Analytics';
+import DataStore from "./DataStore";
 
 /**
  * NetworkCalls class that will contain all network requests that are made throughout the application
@@ -49,6 +50,9 @@ export const getLinkId = async () => {
   }
 
   const { body: { id } } = response;
+
+  DataStore.clear(); // No longer need localStorage
+
   return id;
 };
 
@@ -79,8 +83,23 @@ export const getUrlData = async (url) => {
  * @returns {Promise}
  */
 export const syncFirebaseDB = async () => {
-  const { urlString, links } = store.getters;
-  const response = await Vue.http.post(`${appConfig.cloudFunctionsUrl}/syncData`, { urlString, links });
+  const getters = store.getters;
+
+  const { urlString, links, 'ui/ui': ui, 'userInput/getMeta': meta } = getters;
+  const data = {
+    urlString,
+    links,
+    ui,
+    meta
+  };
+
+  // Don't try and sync Firebase if there isn't a database entry to sync it with!
+  if (getters.urlString === "") {
+    DataStore.persist(data); // Sync data to local storage
+    return;
+  }
+
+  const response = await Vue.http.post(`${appConfig.cloudFunctionsUrl}/syncData`, data);
   const { body } = response;
 
   return body;

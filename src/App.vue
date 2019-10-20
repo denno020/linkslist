@@ -18,11 +18,8 @@
 
 <template>
   <v-app>
-    <header class="v-app__header pt-5 pb-5 text-xs-center">
-      <h1 class="display-2 font-weight-thin">Links List</h1>
-      <h3 class="font-weight-light pt-2">Simply create a list of links. Then share it!</h3>
-      <Alerts />
-    </header>
+    <Header />
+    <Alerts />
     <v-content>
       <v-container fluid fill-height justify-center align-start class="pt-0">
         <v-layout fluid column>
@@ -46,6 +43,9 @@
           </v-layout>
 
           <Toolbar v-if="$store.getters.links.length > 0">
+            <template slot="left">
+              <ChangeTheme />
+            </template>
             <template slot="middle">
               <GetLink/>
             </template>

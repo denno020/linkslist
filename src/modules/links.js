@@ -200,12 +200,6 @@ const actions = {
    * Trigger cloud function that will sync the DB with the current state of the list
    */
   syncDb({ rootGetters }) {
-    const urlString = rootGetters.urlString;
-    // If there is no urlString set, then the list hasn't been created in Firebase yet
-    if (urlString === '') {
-      return;
-    }
-
     const links = rootGetters.links;
 
     // Make sure that all links in the array have their meta data set before syncing to Firebase

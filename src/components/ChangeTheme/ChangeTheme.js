@@ -15,10 +15,21 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import ColourSwatches from '../ColourSwatches/ColourSwatches.vue';
 
-/**
- * FAQ Question/Answer
- */
 export default {
-    name: "Question"
+  name: "ChangeTheme",
+  components: {
+    ColourSwatches
+  },
+  computed: {
+    swatchesVisible() {
+      return this.$store.getters['ui/swatchesVisible'];
+    }
+  },
+  methods: {
+    showColourSwatches() {
+      this.$store.dispatch('ui/toggleColourSwatches');
+    }
+  }
 }

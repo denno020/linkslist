@@ -17,18 +17,18 @@
   -->
 
 <template>
-  <v-layout shrink class="toolbar">
-    <v-flex xs12 md4>
+  <v-layout shrink wrap class="toolbar">
+    <v-flex xs4 md4 class="toolbar__left">
       <slot name="left"></slot>
     </v-flex>
-    <v-flex xs12 md4>
+    <v-flex xs4 md4 class="toolbar__middle">
       <slot name="middle"></slot>
     </v-flex>
-    <v-flex xs12 md4>
+    <v-flex xs4 md4 class="toolbar__right">
       <slot name="right"></slot>
     </v-flex>
   </v-layout>
 </template>
 
 <script src="./Toolbar.js"></script>
-<style scoped src="./Toolbar.css"></style>
+<style scoped lang="scss" src="./Toolbar.scss"></style>

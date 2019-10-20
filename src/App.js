@@ -19,9 +19,12 @@
 import {
   Alerts,
   Card,
+  ChangeTheme,
+  ColourSwatches,
   FAQ,
   Footer,
   GetLink,
+  Header,
   HowToUseDialog,
   Toolbar,
   ViewContainer
@@ -32,9 +35,12 @@ export default {
   components: {
     Alerts,
     Card,
+    ChangeTheme,
+    ColourSwatches,
     FAQ,
     Footer,
     GetLink,
+    Header,
     HowToUseDialog,
     Toolbar,
     ViewContainer

@@ -16,6 +16,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+export const CATEGORY_FEATURE = 'features';
+
 export default class Analytics {
     /**
      * Fire the user timing request to GA
@@ -38,4 +40,37 @@ export default class Analytics {
             'event_category' : category
         });
     };
+
+    /**
+     * Track when users add a custom font to the app
+     * This doesn't track what the custom font is, just that one was added
+     *
+     * @param {string} feature The name of the feature that was used. Title case, with spaces
+     * @param {string|Boolean} value   The value the feature is set to
+     *
+     * @returns {null}
+     */
+    static FireFeatureUsed(feature, value) {
+        Analytics.FireEvent(value, {
+            'event_category': CATEGORY_FEATURE,
+            'event_label': feature
+        });
+    }
+
+    /**
+     * Fire an event on Google Analytics
+     *
+     * @param {string|Boolean} eventAction  The 'action' of the event to creation
+     * @param {Object} eventOptions Extra options to send with the event action
+     *
+     * @returns {null}
+     */
+    static FireEvent(eventAction, eventOptions) {
+        if (window.location.hostname === 'localhost') {
+            console.log(eventAction, eventOptions);
+            return;
+        }
+
+        gtag('event', eventAction, eventOptions);
+    }
 }

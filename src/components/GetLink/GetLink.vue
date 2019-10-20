@@ -37,4 +37,4 @@
 </template>
 
 <script src="./GetLink.js"></script>
-<style scoped src="./GetLink.css"></style>
+<style scoped lang="scss" src="./GetLink.scss"></style>

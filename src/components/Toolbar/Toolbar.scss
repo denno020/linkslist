@@ -16,30 +16,18 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ALERT_SUCCESS } from '../../constants';
+.toolbar {
+    position: relative; // For positioning the colour swatches
+}
 
-export default {
-  name: "GetLink",
-  computed: {
-    urlString() {
-      return this.$store.getters.urlString;
-    },
-    url () {
-      return `${this.$store.getters.projectUrl}${this.urlString}`;
-    },
-    theme() {
-      return this.$store.getters['ui/theme'];
-    },
-    isLoading() {
-      return this.$store.getters['ui/isGettingId'];
-    }
-  },
-  methods: {
-    handleGetLink() {
-      this.$store.dispatch('fetchUrlString');
-    },
-    copyToClipboard() {
-      this.$store.dispatch('alerts/displayAlert', { type: ALERT_SUCCESS, message: 'Copied to clipboard!' });
-    }
-  }
+.toolbar__left {
+
+}
+
+.toolbar__middle {
+
+}
+
+.toolbar__right {
+
 }

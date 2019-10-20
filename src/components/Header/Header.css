@@ -1,4 +1,4 @@
-/*
+/*!
  *  Links List - Create a list of links, and then share it!
  *  Copyright (c) 2019 Luke Denton
  *
@@ -16,9 +16,24 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * FAQ Question/Answer
- */
-export default {
-    name: "Question"
+.app-header__title-heading {
+    position: relative;
+    display: inline-block;
+}
+
+.app-header__title-heading--editor {
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+}
+
+.app-header__subtitle-description {
+    position: relative;
+    display: inline-block;
+}
+
+.app-header__subtitle-description--editor {
+    display: inline-block;
+    text-align: center;
+    width: 100%;
 }

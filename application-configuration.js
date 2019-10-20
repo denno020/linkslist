@@ -18,25 +18,46 @@
 
 const isLive = window.location.hostname !== 'localhost';
 
+const productionFirebase = {
+  "apiKey": "{Enter API key}",
+  "authDomain": "{Enter authDomain}",
+  "databaseURL": "{Enter databaseURL}",
+  "projectId": "{Enter projectID}",
+  "appId": "{Enter Test Environment appId}"
+};
+
+const devFirebase = {
+  "apiKey": "{Enter Test Environment API key}",
+  "authDomain": "{Enter Test Environment authDomain}",
+  "databaseURL": "{Enter Test Environment databaseURL}",
+  "projectId": "{Enter Test Environment projectID}",
+  "appId": "{Enter Test Environment appId}"
+};
+
+/**
+ * @typedef {Object} FirebaseConfig
+ * @property {string} apiKey
+ * @property {string} authDomain
+ * @property {string} databaseURL
+ * @property {string} projectId
+ * @property {string} appId
+ */
+
 export default {
   isLive,
   ...isLive && { // is production
-    projectUrl: '{Enter Project URL}'
+    projectUrl: 'https://linkslist.app/'
   } || { // is development
     projectUrl: 'http://localhost:8080/'
   },
 
   ...isLive && { // is production
-    cloudFunctionsUrl: '{Enter Firebase cloud functions URL}'
+    cloudFunctionsUrl: 'https://us-central1-linkslist-42239.cloudfunctions.net'
   } || { // is development
-    cloudFunctionsUrl: '{Enter URL for local Firebase Cloud Functions dev}'
+    cloudFunctionsUrl: 'http://localhost:5000/linkslist-42239/us-central1'
   },
 
-  firebase: {
-    "apiKey": "{Enter API key}",
-    "authDomain": "{Enter authDomain}",
-    "databaseURL": "{Enter databaseURL}",
-    "projectId": "{Enter projectID}"
-  },
+  /** @var {FirebaseConfig} firebase */
+  firebase: (isLive) ? productionFirebase : devFirebase,
   version: '1.2.1'
 };

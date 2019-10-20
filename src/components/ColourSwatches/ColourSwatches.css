@@ -1,4 +1,4 @@
-/*
+/*!
  *  Links List - Create a list of links, and then share it!
  *  Copyright (c) 2019 Luke Denton
  *
@@ -16,9 +16,12 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * FAQ Question/Answer
- */
-export default {
-    name: "Question"
+.swatches-container {
+    height: 100%;
+    flex-wrap: wrap;
+}
+
+.swatch {
+    width: 20px;
+    height: 20px;
 }

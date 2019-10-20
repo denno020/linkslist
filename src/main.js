@@ -25,6 +25,7 @@ import './plugins/vuetify';
 import App from './App.vue';
 import store from './store';
 import appConfig from '../application-configuration';
+import DataStore from './utils/DataStore';
 
 Vue.config.productionTip = false;
 
@@ -35,6 +36,12 @@ Vue.use(VueClipboard);
 
 if (appConfig.isLive) {
   Vue.use(VueBugsnag);
+}
+
+// Hydrate from localStorage, if data exists
+const storedData = DataStore.getStored();
+if (storedData) {
+    store.dispatch('hydrateState', storedData);
 }
 
 new Vue({
