@@ -16,10 +16,12 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from 'vue';
+import Vuex from 'vuex';
 import modules from './modules';
 import appConfig from '../application-configuration';
+import DataStore from "./utils/DataStore";
+import { ALERT_INFO } from "./constants";
 
 Vue.use(Vuex);
 
@@ -30,21 +32,37 @@ export default new Vuex.Store({
    * Initial state
    */
   state: {
-    projectUrl: appConfig.projectUrl
+    projectUrl: appConfig.projectUrl,
+    areLinksLoading: false
   },
 
   /**
    * These are synchronous and used to update the state directly.
    */
-  mutations: {},
+  mutations: {
+    areLinksLoading(state, isLoading) {
+      state.areLinksLoading = isLoading;
+    }
+
+  },
 
   /**
    * These are required when wanting to do asynchronous actions as well, i.e. API call before updating state
    */
   actions: {
 
+    checkAndHydrateFromLocalStorage({ dispatch }) {
+      // Hydrate from localStorage, if data exists
+      const storedData = DataStore.getStored();
+
+      if (storedData) {
+        dispatch('hydrateState', storedData);
+        dispatch('alerts/displayAlert', { type: ALERT_INFO, message: 'Links restored from local cache' });
+      }
+    },
+
     /**
-     * Hydrate store state using locally stored data
+     * Hydrate store state using data from Firebase or localStorage
      *
      * @param {Object}   module
      * @param {Function}  module.dispatch Dispatch function that calls modules actions
@@ -52,12 +70,23 @@ export default new Vuex.Store({
      *
      * @returns {null}
      */
-    hydrateState({ dispatch }, storedState) {
-      const { links, ui, meta } = storedState;
+    hydrateState({ dispatch, commit }, storedState) {
+      const { links, ui, meta, isPaypalMeDismissed } = storedState;
 
       dispatch('setLinks', links);
       dispatch('ui/setUi', ui);
-      dispatch('userInput/setMeta', meta)
+      dispatch('userInput/setMeta', meta);
+
+      // Accessing commit directly as the action has a call to syncFirebaseDB, which will cause cyclical calls
+      commit('alerts/isPaypalMeVisible', !isPaypalMeDismissed);
+
+      dispatch('setAreLinksLoading', { isLoading: false });
+    },
+
+    setAreLinksLoading({ commit }, payload) {
+      const { isLoading } = payload;
+      commit('areLinksLoading', isLoading);
+
     }
   },
 
@@ -66,6 +95,32 @@ export default new Vuex.Store({
    * returned to the component
    */
   getters: {
-    projectUrl: state => state.projectUrl
+    projectUrl: state => state.projectUrl,
+
+    /**
+     * Get the state that is persisted both to localStorage, but also to Firebase
+     *
+     * @param state
+     * @param getters
+     *
+     * @returns {{ui: *, isPaypalMeDismissed: *, meta: *, links: *}}
+     */
+    getStateToPersist: (state, getters) => {
+      const {
+        links,
+        'ui/ui': ui,
+        'userInput/getMeta': meta,
+        'alerts/isPaypalMeVisible': isPaypalMeVisible
+      } = getters;
+
+      return {
+        links,
+        ui,
+        meta,
+        isPaypalMeDismissed: !isPaypalMeVisible
+      };
+    },
+
+    areLinksLoading: state => state.areLinksLoading
   }
 });

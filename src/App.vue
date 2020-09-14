@@ -55,11 +55,18 @@
           </Toolbar>
 
           <v-layout justify-center :align-start="links.length > 0" :align-center="links.length === 0">
-            <ul v-if="links.length > 0" class="links-list">
-              <li v-for="link in links" :key="link.id" class="pb-3">
-                <Card :link="link" />
-              </li>
-            </ul>
+            <v-list v-if="links.length > 0" expand class="links-list">
+              <template v-for="(link, index) in links">
+                <Card :link="link" class="mb-3" :key="link.id"/>
+                <InFeedAdsense
+                    v-if="index === 0"
+                    data-ad-client="ca-pub-8235545116983936"
+                    data-ad-slot="6877432561"
+                    data-ad-format="fluid"
+                    data-ad-layout-key="-gu-18+5g-2f-83"
+                />
+              </template>
+            </v-list>
             <div v-else class="empty-links-list">
               <div class="empty-links-list__item font-weight-light">
                 Enter URLs into the input box above
@@ -72,6 +79,7 @@
       </v-container>
     </v-content>
     <Footer />
+    <PayPalMe />
   </v-app>
 </template>
 

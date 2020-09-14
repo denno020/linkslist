@@ -29,7 +29,11 @@
     will-change: border-bottom;
 }
 
-@media (max-width: 720px) {
+.author-name {
+    cursor: pointer;
+}
+
+@media (max-width: 910px) {
     .v-footer {
         flex-direction: column;
     }

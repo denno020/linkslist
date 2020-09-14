@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import SVGIcon from '../SVGIcon/SVGIcon.vue';
+import SVGIcon from '@/components/SVGIcon';
 
 export default {
   name: "HowToUseDialog",
@@ -26,11 +26,11 @@ export default {
   data () {
     return {
       dialog: false
-    }
+    };
   },
   computed: {
     theme() {
       return this.$store.getters['ui/theme'];
     }
   }
-}
+};

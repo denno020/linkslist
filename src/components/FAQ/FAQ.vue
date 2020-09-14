@@ -24,7 +24,7 @@
         <v-btn slot="activator" class="privacy-policy-link">FAQ</v-btn>
 
         <v-card>
-            <v-card-title class="headline white--text" :class="theme" primary-title>
+            <v-card-title class="headline white--text" :style="{ backgroundColor: theme }" primary-title>
                 Frequently Asked Questions
             </v-card-title>
 

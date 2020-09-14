@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /$
+Allow: /updates
+Allow: /updates/*
+Disallow: /*

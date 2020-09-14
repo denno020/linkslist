@@ -18,6 +18,7 @@
 
 import { getLinkId } from '../utils/NetworkCalls';
 import { listenForListChange } from '../utils/FirebaseListeners';
+import { ALERT_ERROR } from "../constants";
 
 /**
  * This state is for storing the unique URL string that is used to share the links list
@@ -25,7 +26,8 @@ import { listenForListChange } from '../utils/FirebaseListeners';
 
 const getInitialUrlStringVal = () => {
   const { pathname } = window.location;
-  return pathname ? pathname.replace('/', '') : null;
+  const replacePattern = /\/(app$)?/;
+  return pathname ? pathname.replace(replacePattern, '') : null;
 };
 
 /**
@@ -60,6 +62,10 @@ const actions = {
     listenForListChange(payload);
   },
 
+  clearUrlString({ commit }) {
+    commit('urlString', '');
+  },
+
   /**
    * Fetch the unique string that will be used for sharing the list
    *
@@ -68,11 +74,16 @@ const actions = {
    * @returns {null}
    */
   async fetchUrlString({ dispatch }) {
-    dispatch('ui/setIsGettingId', { isGettingId: true });
-    const id = await getLinkId();
-    dispatch('ui/setIsGettingId', { isGettingId: false });
-    dispatch('urlString', id);
-    history.pushState({}, id, id);
+    try {
+      dispatch('ui/setIsGettingId', { isGettingId: true });
+      const id = await getLinkId();
+      dispatch('ui/setIsGettingId', { isGettingId: false });
+      dispatch('urlString', id);
+      history.pushState({}, id, id);
+    } catch (error) {
+      dispatch('ui/setIsGettingId', { isGettingId: false });
+      dispatch('alerts/displayAlert', { type: ALERT_ERROR, message: 'There was an error creating URL. Please try again' });
+    }
   }
 };
 

@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Question from '../Question/Question.vue';
+import Question from '@/components/Question';
 
 export default {
     name: "FAQ",
@@ -26,11 +26,11 @@ export default {
     data () {
         return {
             dialog: false
-        }
+        };
     },
     computed: {
         theme() {
             return this.$store.getters['ui/theme'];
         }
     }
-}
+};

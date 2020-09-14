@@ -19,8 +19,7 @@
 <template>
   <div class="alerts">
     <Alert
-      v-for="(type, index) in types"
-      v-if="$store.getters['alerts/isVisible'](type.type)"
+      v-for="(type, index) in alerts"
       :key="index"
       :type="type.type"
       :icon="type.icon"

@@ -1,4 +1,7 @@
 {
+  "listOwner": "listOwner",
   "lists": "{Enter table name for lists}",
-  "usedIds": "{Enter table name for usedIds}"
+  "usedIds": "{Enter table name for usedIds}",
+  "mailingList": "mailingList",
+  "users": "users"
 }

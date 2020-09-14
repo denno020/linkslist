@@ -1,0 +1,64 @@
+/*!
+ *  Links List - Create a list of links, and then share it!
+ *  Copyright (c) 2020 Luke Denton
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+
+.landing-carousel {
+  box-shadow: none;
+
+  /deep/ .v-btn--icon {
+    color: skyblue;
+  }
+}
+
+.modal {
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.7);
+
+  &[open] {
+    display: inherit;
+    opacity: 1;
+  }
+
+  &:before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    margin-right: -4px; /* Adjusts for spacing */
+  }
+
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .modal-dialog {
+    display: inline-block;
+    text-align: left;
+    vertical-align: middle;
+    transform: translateY(-100%);
+  }
+
+  /deep/ .form-control {
+    background-color: #F3F3F3;
+  }
+}
+
+

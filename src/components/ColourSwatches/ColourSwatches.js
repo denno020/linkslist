@@ -20,7 +20,7 @@ export default {
     name: "ColourSwatches",
     computed: {
         swatches() {
-            return this.$store.getters['ui/colourSwatches']
+            return this.$store.getters['ui/colourSwatches'];
         }
     },
     methods: {
@@ -29,4 +29,4 @@ export default {
             this.$store.dispatch('ui/toggleColourSwatches', { visible: false });
         }
     }
-}
+};

@@ -33,14 +33,14 @@
           contain
           class="v-card__image"
         ></v-img>
-        <v-icon v-else :x-large="isOpen" class="v-card__image--not_found">image_search</v-icon>
+        <v-icon v-else :x-large="isOpen" class="v-card__image--not_found" :class="{ 'skeleton skeleton--image': this.isSkeleton }">image_search</v-icon>
       </v-flex>
       <v-flex xs12 layout align-center>
         <v-card-title primary-title>
           <div>
             <div :class="{'headline' : isOpen, 'subheading': isDense}">
               <v-layout align-center class="v-card__title-container">
-                <span v-if="this.loaded">{{this.title}}</span>
+                <span v-if="this.loaded" :class="{ 'skeleton': this.isSkeleton }">{{this.title}}</span>
                 <span v-else>
                   <AnimatedEllipsis/>
                 </span>
@@ -53,7 +53,7 @@
               </v-layout>
             </div>
             <div v-if="isOpen">
-              <span v-if="this.loaded">{{this.description}}</span>
+              <span v-if="this.loaded" :class="{ 'skeleton': this.isSkeleton }">{{this.description}}</span>
               <span v-else>
                   <AnimatedEllipsis/>
               </span>
@@ -65,7 +65,9 @@
     <v-divider light v-if="isOpen"></v-divider>
     <v-card-actions class="d-flex pa-0" v-if="isOpen">
       <a :href="this.url" target="_blank" rel="nofollow noopener" class="pa-2 card-action">
-        {{this.url}}
+        <span :class="{ 'skeleton': this.isSkeleton }">
+          {{this.url}}
+        </span>
         <v-icon>open_in_new</v-icon>
       </a>
     </v-card-actions>

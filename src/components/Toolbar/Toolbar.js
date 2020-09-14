@@ -18,4 +18,4 @@
 
 export default {
   name: "Toolbar"
-}
+};

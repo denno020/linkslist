@@ -1,0 +1,96 @@
+<!--
+  -  Links List - Create a list of links, and then share it!
+  -  Copyright (c) 2019 Luke Denton
+  -
+  -  This program is free software: you can redistribute it and/or modify
+  -  it under the terms of the GNU General Public License as published by
+  -  the Free Software Foundation; either version 3 of the License, or
+  -  (at your option) any later version.
+  -
+  -  This program is distributed in the hope that it will be useful,
+  -  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  -  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  -  GNU General Public License for more details.
+  -
+  -  You should have received a copy of the GNU General Public License
+  -  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<template>
+  <v-app>
+    <Header />
+    <Alerts />
+    <v-content>
+      <v-container fluid fill-height justify-center align-start class="pt-0">
+        <v-layout fluid column>
+          <v-layout justify-center align-start shrink>
+            <v-flex xs12 md8>
+              <v-layout justify-center align-start>
+                <v-text-field
+                    label="https://"
+                    solo
+                    hide-details
+                    v-model="linkUrl"
+                    @keyup.enter="handleAddLink"
+                ></v-text-field>
+                <v-btn :color="theme" class="button--add white--text" @click="handleAddLink">
+                  <v-icon class="mr-1">add</v-icon>
+                  Add
+                  <span class="ml-1" v-if="urlCount > 0">({{this.urlCount}})</span>
+                </v-btn>
+              </v-layout>
+            </v-flex>
+          </v-layout>
+
+          <Toolbar v-if="links.length > 0 || $store.getters.areLinksLoading">
+            <template slot="left">
+              <ChangeTheme />
+            </template>
+            <template slot="middle">
+              <GetLink/>
+            </template>
+            <template slot="right">
+              <ViewContainer />
+            </template>
+          </Toolbar>
+
+          <v-layout justify-center :align-start="links.length > 0" :align-center="links.length === 0">
+
+            <v-list v-if="$store.getters.areLinksLoading" expand class="links-list">
+              <Card class="mb-3" skeleton/>
+              <Card class="mb-3" skeleton/>
+              <Card class="mb-3" skeleton/>
+            </v-list>
+
+            <v-list v-else-if="links.length > 0" expand class="links-list">
+              <template v-for="(link) in links">
+                <Card :link="link" class="mb-3" :key="link.id"/>
+<!--                <InFeedAdsense-->
+<!--                    :key="index"-->
+<!--                    v-if="index === 0"-->
+<!--                    data-ad-client="ca-pub-8235545116983936"-->
+<!--                    data-ad-slot="6877432561"-->
+<!--                    data-ad-format="fluid"-->
+<!--                    data-ad-layout-key="-gu-18+5g-2f-83"-->
+<!--                />-->
+              </template>
+            </v-list>
+
+            <div v-else class="empty-links-list">
+              <div class="empty-links-list__item font-weight-light">
+                Enter URLs into the input box above
+              </div>
+              <HowToUseDialog class="empty-links-list__item"/>
+              <FAQ class="empty-links-list__item"/>
+            </div>
+          </v-layout>
+        </v-layout>
+      </v-container>
+    </v-content>
+    <Footer />
+    <PayPalMe />
+  </v-app>
+</template>
+
+<script src="./App.js"></script>
+<style scoped src="./App.css"></style>

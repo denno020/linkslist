@@ -21,11 +21,11 @@ export default {
   data () {
     return {
       dialog: false
-    }
+    };
   },
   computed: {
     theme() {
       return this.$store.getters['ui/theme'];
     }
   }
-}
+};

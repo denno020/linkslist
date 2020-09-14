@@ -27,8 +27,8 @@ export default class Ajax {
     return Http.get(url);
   }
 
-  static post(url, data) {
-    return Http.post(url, data);
+  static post(url, data, headers) {
+    return Http.post(url, data, { headers });
   }
 
   static put(url, data) {

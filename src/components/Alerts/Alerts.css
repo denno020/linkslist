@@ -16,3 +16,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+.alerts {
+    position: absolute;
+    top: 5%;
+    left: 20px;
+    right: 20px;
+    z-index: 10;
+}

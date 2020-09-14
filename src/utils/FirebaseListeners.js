@@ -18,26 +18,32 @@
 
 import firebase from 'firebase/app';
 import 'firebase/database';
+import 'firebase/auth';
 import store from '../store';
 import appConfig from "../../application-configuration";
 import tables from '../../functions/tables.json';
+import router from "../router";
+import { ALERT_ERROR } from "../constants";
 
 firebase.initializeApp(appConfig.firebase);
 
+export const auth = firebase.auth();
+export const db = firebase.database();
+
 export const listenForListChange = (urlString) => {
-  firebase.database().ref(`/${tables.lists}`).orderByChild('id').equalTo(urlString).on('value', (snapshot) => {
+  db.ref(`/${tables.lists}`).orderByChild('id').equalTo(urlString).on('value', (snapshot) => {
     const updatedVal = snapshot.val();
 
     if (!updatedVal) {
-      // @TODO This is so temporary - replace with a dialog informing the user that the ID doesn't exist first
-      window.location.replace('/');
+      store.dispatch('alerts/displayAlert', { type: ALERT_ERROR, message: `There is no list with id ${urlString}` });
+      router.push({ path: '/app' }); // Need to also reset the interface, now that we're not doing a full page refresh
+      store.dispatch('setAreLinksLoading', { isLoading: false });
+      store.dispatch('clearUrlString');
+      store.dispatch('checkAndHydrateFromLocalStorage');
       return;
     }
 
-    const { links, ui, meta } = Object.values(updatedVal)[0];
-
-    store.dispatch('setLinks', links);
-    store.dispatch('ui/setUi', ui);
-    store.dispatch('userInput/setMeta', meta)
-  })
+    const { createdAt, id, updatedAt, ...storedState } = Object.values(updatedVal)[0]; // eslint-disable-line no-unused-vars
+    store.dispatch('hydrateState', storedState);
+  });
 };

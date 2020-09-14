@@ -17,6 +17,7 @@
  */
 
 import { ALERT_SUCCESS, ALERT_ERROR, ALERT_INFO, ALERT_WARNING } from '../constants';
+import { syncFirebaseDB } from "../utils/NetworkCalls";
 
 /**
  * Initial state
@@ -52,7 +53,8 @@ const state = {
     [ALERT_ERROR]: '',
     [ALERT_WARNING]: '',
     [ALERT_INFO]: ''
-  }
+  },
+  isPaypalMeVisible: true
 };
 
 /**
@@ -88,6 +90,17 @@ const mutations = {
     const { type } = payload;
     state.show[type] = false;
     state.text[type] = '';
+  },
+
+  /**
+   *
+   * @param {Object}  state     The slide of state that this module is responsible for
+   * @param {Boolean} isVisible Flag indicating if the "snackbar" is visible or not
+   *
+   * @returns {null}
+   */
+  isPaypalMeVisible(state, isVisible) {
+    state.isPaypalMeVisible = isVisible;
   }
 };
 
@@ -117,11 +130,24 @@ const actions = {
   /**
    * Action to hide alert of specified type
    *
-   * @param {Object} module
+   * @param {Object} state   The slide of state that this module is responsible for
    * @param {Object} payload
    */
   hideAlert({ commit }, payload) {
     commit('hideAlert', payload);
+  },
+
+  /**
+   *
+   * @param {Object} state   The slide of state that this module is responsible for
+   * @param {Object} payload Object containing the new value for the property
+   *
+   * @returns {null}
+   */
+  setIsPaypalMeVisible({ commit }, payload) {
+    const { isVisible } = payload;
+    commit('isPaypalMeVisible', isVisible);
+    syncFirebaseDB();
   }
 };
 
@@ -133,7 +159,8 @@ const actions = {
 const getters = {
   isVisible: state => type => state.show[type],
   getText: state => type => state.text[type],
-  getTypes: state => state.types
+  getTypes: state => state.types,
+  isPaypalMeVisible: state => state.isPaypalMeVisible
 };
 
 // Module exports

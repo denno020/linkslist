@@ -16,7 +16,20 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global gtag */
+
 export const CATEGORY_FEATURE = 'features';
+export const CATEGORY_PAYPALME = 'paypal_me';
+export const CATEGORY_AUTHENTICATION = 'authentication';
+
+export const PAYPALME_INTERACTION__DISMISS = 'dismiss'; // User chooses to dismiss the snackbar
+export const PAYPALME_INTERACTION__SUPPORT = 'support'; // User clicks on the PayPal.me link
+export const PAYPALME_INTERACTION__CHANGE_MIND = 'change_mind'; // User (presumably having hidden the snackbar) is deciding to view it again
+
+export const AUTHENTICATION_SIGNUP = 'signup';
+export const AUTHENTICATION_LOGIN = 'login';
+export const AUTHENTICATION_LOGOUT = 'logout';
+export const AUTHENTICATION_SHOWN = 'shown';
 
 export default class Analytics {
     /**
@@ -39,7 +52,7 @@ export default class Analytics {
             'value' : time,
             'event_category' : category
         });
-    };
+    }
 
     /**
      * Track when users add a custom font to the app
@@ -54,6 +67,25 @@ export default class Analytics {
         Analytics.FireEvent(value, {
             'event_category': CATEGORY_FEATURE,
             'event_label': feature
+        });
+    }
+
+    /**
+     * Send event to GA to track if people are dismissing the paypal.me support link, or if they're showing it
+     *
+     * @param {Boolean} isDismissed True = notice was dismissed. False = PayPal.me link was clicked
+     *
+     * @returns {null}
+     */
+    static FirePaypalMeInteraction(interaction) {
+        Analytics.FireEvent(interaction, {
+            'event_category': CATEGORY_PAYPALME
+        });
+    }
+
+    static FireAuthentication(type) {
+        Analytics.FireEvent(type, {
+            'event_category': CATEGORY_AUTHENTICATION
         });
     }
 

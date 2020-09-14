@@ -32,4 +32,4 @@ export default {
       return [ALERT_SUCCESS, ALERT_INFO].includes(this.type);
     }
   }
-}
+};

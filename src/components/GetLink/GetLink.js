@@ -42,4 +42,4 @@ export default {
       this.$store.dispatch('alerts/displayAlert', { type: ALERT_SUCCESS, message: 'Copied to clipboard!' });
     }
   }
-}
+};

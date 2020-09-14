@@ -161,23 +161,54 @@ const actions = {
   },
 
   /**
+   * Alias for the setListTitle action below
+   * This is only here to be used when hydrating state from a stored list (either in localStorage or Firebase)
+   *
+   * @param {Object}   module
+   * @param {function}  module.dispatch Function to call actions on the module
+   * @param {Object}   payload
+   * @param {string}    payload.value The title for the list
+   *
+   * @returns {null}
+   */
+  listTitle({ dispatch }, payload) {
+    const { value } = payload;
+    dispatch('setListTitle', { listTitle: value });
+  },
+
+  /**
    * @param {Object}   module
    * @param {function}  module.commit     Function to call mutations on the module
    * @param {Object}   payload
-   * @param {Object}    payload.listTitle The new title for the list
+   * @param {string}    payload.listTitle The new title for the list
    *
    * @returns {null}
    */
   setListTitle({ commit }, payload) {
     const { listTitle } = payload;
     commit('listTitle', listTitle);
+    document.title = listTitle;
+  },
+
+  /**
+   * Alias for the setListDescription action below
+   * This is only here to be used when hydrating state from a stored list (either in localStorage or Firebase)
+   *
+   * @param {Object}   module
+   * @param {function}  module.dispatch Function to call actions on the module
+   * @param {Object}   payload
+   * @param {string}    payload.value The description for the list
+   */
+  listDescription({ dispatch }, payload) {
+    const { value } = payload;
+    dispatch('setListDescription', { listDescription: value });
   },
 
   /**
    * @param {Object}   module
    * @param {function}  module.commit           Function to call mutations on the module
    * @param {Object}   payload
-   * @param {Object}    payload.listDescription The new description for the list
+   * @param {string}    payload.listDescription The new description for the list
    *
    * @returns {null}
    */
@@ -203,7 +234,7 @@ const actions = {
       syncFirebaseDB();
     }
 
-    Analytics.FireFeatureUsed('edit_title', isEditing);
+    Analytics.FireFeatureUsed('edit_title', isEditing ? 'true' : 'false');
   },
 
   /**
@@ -223,27 +254,27 @@ const actions = {
       syncFirebaseDB();
     }
 
-    Analytics.FireFeatureUsed('edit_description', isEditing);
+    Analytics.FireFeatureUsed('edit_description', isEditing ? 'true' : 'false');
   },
 
   /**
    * Set the meta data for the links list, likely from Firebase DB
    *
    * @param {Object}   module
-   * @param {function}  module.commit     Function to call mutations on the module
+   * @param {function}  module.dispatch Function to call actions on the module
    * @param {Object}   payload
    * @param {string}    payload.listTitle       The saved title for the list
    * @param {string}    payload.listDescription The saved description for the list
    */
-  setMeta({ commit }, payload) {
+  setMeta({ dispatch }, payload) {
     if (!payload) {
       return;
     }
 
     Object.entries(payload).forEach((entry) => {
       const [property, value] = entry;
-      commit(property, value);
-    })
+      dispatch(property, { value });
+    });
   }
 };
 

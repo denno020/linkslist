@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import AnimatedEllipsis from '../AnimatedEllipsis/AnimatedEllipsis.vue';
+import AnimatedEllipsis from '@/components/AnimatedEllipsis';
 import { VIEW_OPEN, VIEW_DENSE } from '../../constants';
 
 export default {
@@ -24,9 +24,23 @@ export default {
   components: {
     AnimatedEllipsis
   },
-  props: [
-    'link'
-  ],
+  props: {
+    link: {
+      default: () => ({
+        id: '',
+        loaded: true,
+        image: '',
+        title: 'Placeholder card',
+        description: 'This is a placeholder card! The description is longer to make the loading bar look better',
+        url: 'placeholder-card.com',
+      }),
+      type: Object
+    },
+    skeleton: {
+      default: false,
+      type: Boolean
+    }
+  },
   computed: {
     isOpen() {
       return this.$store.getters['ui/viewMode'] === VIEW_OPEN;
@@ -51,6 +65,9 @@ export default {
     },
     url() {
       return this.link.url;
+    },
+    isSkeleton() {
+      return this.skeleton;
     }
   },
   methods: {
@@ -66,4 +83,4 @@ export default {
       this.$store.dispatch('removeLink', linkId);
     }
   }
-}
+};

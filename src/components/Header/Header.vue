@@ -18,10 +18,23 @@
 
 <template>
     <header class="app-header pt-5 pb-5 text-xs-center">
+        <div class="app-header__actions">
+            <div v-if="this.$store.getters.isLoggedIn && this.$store.getters.urlString"
+                 class="app-header__subscribe-container">
+                <v-btn :color="this.$store.getters['ui/theme']" flat v-if="isSubscribeVisible" @click="handleListSubscription" title="Subscribing to this list will store a link to it in your List Subscriptions panel!">
+                    <span v-if="this.$store.getters.isSubscribed"><v-icon :color="this.$store.getters['ui/theme']">star</v-icon> Unsubscribe</span>
+                    <span v-else> <v-icon :color="this.$store.getters['ui/theme']">star_border</v-icon> Subscribe</span>
+                </v-btn>
+            </div>
+            <div class="app-header__login-container">
+                <Authentication v-if="!$store.getters.isLoggedIn"/>
+                <UserAccount v-else/>
+            </div>
+        </div>
         <div class="app-header__title" @mouseleave="showTitleEditButton = false">
             <h1 v-if="!isEditingTitle" class="app-header__title-heading display-2 font-weight-thin">
-                <span @mouseover="showTitleEditButton = true">{{listTitle}}</span>
-                <EditButtonInline v-if="showTitleEditButton" :onClick="setIsEditingListTitle" />
+                <span @mouseover="showTitleEditButton = true">{{ listTitle }}</span>
+                <EditButtonInline v-if="showTitleEditButton" :onClick="setIsEditingListTitle"/>
             </h1>
             <input
                 ref="linkTitle"
@@ -30,10 +43,11 @@
                 @keyup.enter="setIsEditingListTitle(false)"
                 class="app-header__title-heading--editor display-2 font-weight-thin"
             />
+
         </div>
         <div class="app-header__subtitle pt-2" @mouseleave="showDescriptionEditButton = false">
             <h3 v-if="!isEditingDescription" class="app-header__subtitle-description font-weight-light subheading">
-                <span @mouseover="showDescriptionEditButton = true">{{listDescription}}</span>
+                <span @mouseover="showDescriptionEditButton = true">{{ listDescription }}</span>
                 <EditButtonInline v-if="showDescriptionEditButton" :onClick="setIsEditingListDescription"/>
             </h3>
             <input

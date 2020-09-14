@@ -32,7 +32,7 @@ export default class DataStore {
    * @returns {Promise}
    */
   static persist(state) {
-    return new Promise((resolve) => {
+    return new Promise(() => {
       localStorage.setItem('links-list', JSON.stringify(state));
     });
   }

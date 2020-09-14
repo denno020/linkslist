@@ -30,11 +30,11 @@ export default {
         shush: iconShush,
         wink: iconWink
       }
-    }
+    };
   },
   methods: {
     getIcon () {
       return this.icons[this.icon];
     }
   }
-}
+};

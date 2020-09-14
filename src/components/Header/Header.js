@@ -16,13 +16,18 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { EditButtonInline } from '../';
+import Authentication from "@/components/Authentication";
+import EditButtonInline from "@/components/EditButtonInline";
+import UserAccount from "@/components/UserAccount";
+import { db } from '../../utils/FirebaseListeners';
 
 export default {
   name: "Header",
 
   components: {
-    EditButtonInline
+    EditButtonInline,
+    Authentication,
+    UserAccount
   },
 
   data() {
@@ -36,7 +41,7 @@ export default {
     listTitle: {
       get() { return this.$store.getters['userInput/listTitle']; },
       set(listTitle) {
-        this.$store.dispatch('userInput/setListTitle', { listTitle })
+        this.$store.dispatch('userInput/setListTitle', { listTitle });
       }
     },
     listDescription: {
@@ -50,6 +55,10 @@ export default {
     },
     isEditingDescription() {
       return this.$store.getters['userInput/isEditingListDescription'];
+    },
+    isSubscribeVisible() {
+      const isThisMyList = typeof this.$store.getters.myLists.find(list => list.id === this.$store.getters.urlString) !== 'undefined';
+      return  !isThisMyList && !this.isEditingTitle;
     }
   },
 
@@ -71,6 +80,28 @@ export default {
           this.$refs.linkDescription.focus();
         });
       }
+    },
+
+    /**
+     * Handle subscriptions to a Links List.
+     * This will both subscribe and unsubscribe, depending on the current status of subscription to the list that is
+     * currently visible
+     */
+    handleListSubscription() {
+      if (!this.$store.getters.isSubscribed) {
+        db.ref(`users/${this.$store.getters.user.uid}/subscribedLists`).push(this.$store.getters.urlString);
+        return;
+      }
+
+      // User is already subscribed, so they're attempting to remove a subscription
+      const unsubscribedListEntry = this.$store.getters.subscribedLists.find(subscribedList => subscribedList.id === this.$store.getters.urlString)
+      const subscribedListRef = db.ref(`users/${this.$store.getters.user.uid}/subscribedLists/${unsubscribedListEntry.firebaseId}`);
+      if (!subscribedListRef) {
+        // For some reason, we weren't able to find a reference for the saved list ID, so ignore the action
+        return;
+      }
+
+      subscribedListRef.remove();
     }
   }
-}
+};

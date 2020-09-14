@@ -17,15 +17,19 @@
  */
 
 import alerts from './alerts';
+import authentication from './authentication';
 import links from './links';
 import ui from './ui';
 import userInput from './userInput';
 import urlString from './urlString';
+import updates from './updates';
 
 export default {
   alerts,
+  authentication,
   links,
   ui,
   userInput,
-  urlString
-}
+  urlString,
+  updates
+};

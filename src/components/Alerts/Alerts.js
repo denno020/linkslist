@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Alert } from '../';
+import Alert from '@/components/Alert';
 
 export default {
   name: "Alerts",
@@ -24,8 +24,8 @@ export default {
     Alert
   },
   computed: {
-    types() {
-      return this.$store.getters['alerts/getTypes']
+    alerts() {
+      return this.$store.getters['alerts/getTypes'].filter(type => this.$store.getters['alerts/isVisible'](type.type));
     }
   }
-}
+};

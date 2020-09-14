@@ -24,6 +24,7 @@ import appConfig from '../../application-configuration';
 import Performance from './Performance';
 import Analytics from './Analytics';
 import DataStore from "./DataStore";
+import { auth } from "@/utils/FirebaseListeners";
 
 /**
  * NetworkCalls class that will contain all network requests that are made throughout the application
@@ -39,7 +40,10 @@ export const getLinkId = async () => {
   const ui = store.getters['ui/ui'];
   Performance.mark('start_generating_id');
 
-  const response = await Ajax.post(`${appConfig.cloudFunctionsUrl}/getLink`, { links, ui });
+  const headers = store.getters.isLoggedIn ? {
+    Authorization: `Bearer ${await auth.currentUser.getIdToken()}`
+  } : undefined;
+  const response = await Ajax.post(`${appConfig.cloudFunctionsUrl}/getLink`, { links, ui }, headers);
 
   Performance.mark('finish_generating_id');
   Performance.measure('time_to_generate_id', 'start_generating_id', 'finish_generating_id');
@@ -84,23 +88,36 @@ export const getUrlData = async (url) => {
  */
 export const syncFirebaseDB = async () => {
   const getters = store.getters;
-
-  const { urlString, links, 'ui/ui': ui, 'userInput/getMeta': meta } = getters;
-  const data = {
-    urlString,
-    links,
-    ui,
-    meta
-  };
+  const data = store.getters['getStateToPersist'];
+  const { urlString } = getters;
 
   // Don't try and sync Firebase if there isn't a database entry to sync it with!
-  if (getters.urlString === "") {
+  if (urlString === "") {
     DataStore.persist(data); // Sync data to local storage
     return;
   }
 
-  const response = await Vue.http.post(`${appConfig.cloudFunctionsUrl}/syncData`, data);
+  const response = await Vue.http.post(`${appConfig.cloudFunctionsUrl}/syncData`, { urlString, ...data });
   const { body } = response;
 
   return body;
+};
+
+/**
+ * Send data user email to Firebase cloud function to store for future updates regarding either the free program or
+ * the premium features
+ *
+ * @param {string}  email                 Email address of the user signing up
+ * @param {Boolean} isInterestedInPremium Flag indicating if they're subscribing to app updates, or to premium features being released
+ *
+ * @returns {Promise<boolean>}
+ */
+export const subscribe = async (email, isInterestedInPremium) => {
+  const response = await Vue.http.post(`${appConfig.cloudFunctionsUrl}/subscribe`, { email, isInterestedInPremium });
+  const { status } = response;
+  return status === 200;
+};
+
+export const createUserRecord = (uid) => {
+  return Vue.http.post(`${appConfig.cloudFunctionsUrl}/createUserRecord`, { uid });
 };

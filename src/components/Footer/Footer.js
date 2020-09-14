@@ -16,13 +16,16 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import PrivacyDialog from '../PrivacyDialog/PrivacyDialog.vue';
+import Analytics, { PAYPALME_INTERACTION__CHANGE_MIND } from "../../utils/Analytics";
+import PrivacyDialog from '@/components/PrivacyDialog';
+import TermsDialog from '@/components/TermsDialog';
 import appConfig from '../../../application-configuration';
 
 export default {
   name: "Footer",
   components: {
-    PrivacyDialog
+    PrivacyDialog,
+    TermsDialog
   },
   computed: {
     theme() {
@@ -31,5 +34,11 @@ export default {
     applicationVersion() {
       return appConfig.version;
     }
+  },
+  methods: {
+    showPaypalMeSnackbar() {
+      this.$store.dispatch('alerts/setIsPaypalMeVisible', { isVisible: true });
+      Analytics.FirePaypalMeInteraction(PAYPALME_INTERACTION__CHANGE_MIND);
+    }
   }
-}
+};

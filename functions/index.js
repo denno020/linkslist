@@ -24,6 +24,7 @@ const cors = require('cors')({
 const randomstring = require('randomstring');
 const HttpStatus = require('http-status-codes');
 const moment = require('moment');
+const emailValidator = require('email-validator');
 const tables = require('./tables.json');
 
 // Determine which Firebase app should be used
@@ -71,6 +72,37 @@ const getTodayString = () => {
 };
 
 /**
+ * Decode a user authentication token, extracting the user ID from it
+ *
+ * @param authToken
+ *
+ * @returns {Promise<string>}
+ */
+const decodeToken = (authToken) => {
+  return admin.auth().verifyIdToken(authToken).then((decodedToken) => {
+    return decodedToken.uid;
+  })
+}
+
+/**
+ * Extract the user ID from the request
+ *
+ * @param request
+ *
+ * @returns {Promise<string>|Promise<Boolean>}
+ */
+function getAdminId(request) {
+  if (!request.headers.authorization) {
+    return new Promise((res) => {
+      res(false);
+    })
+  }
+
+  const authToken = request.headers.authorization.split('Bearer ')[1];
+  return decodeToken(authToken);
+}
+
+/**
  * Generate random string for users list
  *
  * @type {HttpsFunction}
@@ -81,7 +113,7 @@ exports.getLink = functions.https.onRequest(async (request, response) => {
   // Handle the pre-flight check
   if (request.method === 'OPTIONS') {
     response
-      .append('Access-Control-Allow-Headers', 'content-type')
+      .append('Access-Control-Allow-Headers', 'content-type, Authorization')
       .append('Access-Control-Allow-Origin', '*')
       .append('Access-Control-Allow-Method', allowedRequestMethods.join(','))
       .status(HttpStatus.NO_CONTENT)
@@ -113,15 +145,28 @@ exports.getLink = functions.https.onRequest(async (request, response) => {
   const usedIds = snapshot.val() ? Object.values(snapshot.val()): [];
   const newId = getNewId(usedIds);
 
+  const adminId = await getAdminId(request);
+
   usedIdsRef.push(newId);
   listsRef.push({
     id: newId,
     ui,
     links,
     createdAt: getTodayString(),
-    updatedAt: getTodayString()
+    updatedAt: getTodayString(),
+    isOwned: adminId !== false // Indicates that a signed in user created this list, therefore will be eligible for premium features
   });
 
+  // If this list was created by an authenticated user, they're now the admin of the list
+  if (adminId !== false) {
+    // Store the new list against the User DB entry
+    admin.database().ref(`/${tables.users}/${adminId}/myLists`).push(newId);
+    // Also store a reference of the User who created the list in a separate DB
+    // This will be used for things like checking premium status etc
+    admin.database().ref(`/${tables.listOwner}/${newId}`).set(adminId);
+  }
+
+  // If there isn't an authorization header, then the user isn't logged in
   return cors(request, response, () => {
     response.status(HttpStatus.OK).send({ id: newId });
   });
@@ -153,8 +198,16 @@ exports.syncData = functions.https.onRequest(async (request, response) => {
   }
 
   // Ensure the links parameter is set correctly
-  const { urlString, links, ui, meta } = request.body;
-  if (!urlString || !links || !ui || !meta) {
+  const { urlString, links, ui, meta, isPaypalMeDismissed } = request.body;
+  if (
+    [
+      typeof urlString,
+      typeof links,
+      typeof ui,
+      typeof meta,
+      typeof isPaypalMeDismissed
+    ].includes('undefined')
+  ) {
     response.status(HttpStatus.BAD_REQUEST).send();
     return;
   }
@@ -168,7 +221,107 @@ exports.syncData = functions.https.onRequest(async (request, response) => {
     links,
     ui,
     meta,
+    isPaypalMeDismissed,
     updatedAt: getTodayString()
+  });
+
+  return cors(request, response, () => {
+    response.status(HttpStatus.OK).send();
+  });
+});
+
+exports.subscribe = functions.https.onRequest(async (request, response) => {
+  const allowedRequestMethods = ['POST'];
+
+  // Handle the pre-flight check
+  if (request.method === 'OPTIONS') {
+    response
+      .append('Access-Control-Allow-Headers', 'content-type')
+      .append('Access-Control-Allow-Origin', '*')
+      .append('Access-Control-Allow-Method', allowedRequestMethods.join(','))
+      .status(HttpStatus.NO_CONTENT)
+      .send();
+    return;
+  }
+
+  // Only allow function to continue if the user has used the correct request type
+  if (!allowedRequestMethods.includes(request.method)) {
+    response.status(HttpStatus.METHOD_NOT_ALLOWED).send(`This resource doesn't accept ${request.method} requests`);
+    return;
+  }
+
+  // Ensure the request is formatted correctly
+  const { email, isInterestedInPremium = false } = request.body;
+
+  if (
+    [
+      typeof email
+    ].includes('undefined')
+  ) {
+    response.status(HttpStatus.BAD_REQUEST).send();
+    return;
+  }
+
+  const isValidEmail = emailValidator.validate(email);
+  if (!isValidEmail) {
+    response.status(HttpStatus.BAD_REQUEST).send();
+    return;
+  }
+
+  const dbTable = isInterestedInPremium ? 'premiumSubscribers' : 'subscribers';
+
+  const existingRecordSnapshot = await admin.database().ref(`/${tables.mailingList}/${dbTable}`).orderByChild('email').equalTo(email).once('value');
+
+  // Only add the email if it doesn't already exist in the database
+  if (existingRecordSnapshot.val() === null) {
+    admin.database().ref(`/${tables.mailingList}/${dbTable}`).push({
+      email,
+      added: getTodayString()
+    });
+  }
+
+  return cors(request, response, () => {
+    response.status(HttpStatus.OK).send();
+  });
+})
+
+exports.createUserRecord = functions.https.onRequest(async (request, response) => {
+  const allowedRequestMethods = ['POST'];
+
+  // Handle the pre-flight check
+  if (request.method === 'OPTIONS') {
+    response
+      .append('Access-Control-Allow-Headers', 'content-type')
+      .append('Access-Control-Allow-Origin', '*')
+      .append('Access-Control-Allow-Method', allowedRequestMethods.join(','))
+      .status(HttpStatus.NO_CONTENT)
+      .send();
+    return;
+  }
+
+  // Only allow function to continue if the user has used the correct request type
+  if (!allowedRequestMethods.includes(request.method)) {
+    response.status(HttpStatus.METHOD_NOT_ALLOWED).send(`This resource doesn't accept ${request.method} requests`);
+    return;
+  }
+
+  // Ensure the request is formatted correctly
+  const { uid } = request.body;
+
+  if (
+    [
+      typeof uid
+    ].includes('undefined')
+  ) {
+    response.status(HttpStatus.BAD_REQUEST).send();
+    return;
+  }
+
+  await admin.database().ref(`users/${uid}`).set({
+    id: uid,
+    displayName: '',
+    myLists: '',
+    subscribedLists: ''
   });
 
   return cors(request, response, () => {

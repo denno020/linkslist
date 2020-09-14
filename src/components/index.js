@@ -28,6 +28,7 @@ export { default as Footer } from './Footer/Footer.vue';
 export { default as GetLink } from './GetLink/GetLink.vue';
 export { default as Header } from './Header/Header.vue';
 export { default as HowToUseDialog } from './HowToUseDialog/HowToUseDialog.vue';
+export { default as PayPalMe } from './PayPalMe/PayPalMe.vue';
 export { default as PrivacyDialog } from './PrivacyDialog/PrivacyDialog.vue';
 export { default as Question } from './Question/Question.vue';
 export { default as Toolbar } from './Toolbar/Toolbar.vue';

@@ -26,6 +26,7 @@ import {
   GetLink,
   Header,
   HowToUseDialog,
+  PayPalMe,
   Toolbar,
   ViewContainer
 } from './components';
@@ -42,6 +43,7 @@ export default {
     GetLink,
     Header,
     HowToUseDialog,
+    PayPalMe,
     Toolbar,
     ViewContainer
   },

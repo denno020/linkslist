@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import ColourSwatches from '../ColourSwatches/ColourSwatches.vue';
+import ColourSwatches from '@/components/ColourSwatches';
 
 export default {
   name: "ChangeTheme",
@@ -32,4 +32,4 @@ export default {
       this.$store.dispatch('ui/toggleColourSwatches');
     }
   }
-}
+};
