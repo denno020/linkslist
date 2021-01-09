@@ -1,6 +1,6 @@
 /*
  *  Links List - Create a list of links, and then share it!
- *  Copyright (c) 2019 Luke Denton
+ *  Copyright (c) Luke Denton
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@ import Authentication from "@/components/Authentication";
 import EditButtonInline from "@/components/EditButtonInline";
 import UserAccount from "@/components/UserAccount";
 import { db } from '../../utils/FirebaseListeners';
+import Analytics from "../../utils/Analytics";
 
 export default {
   name: "Header",
@@ -33,7 +34,9 @@ export default {
   data() {
     return {
       showTitleEditButton: false,
-      showDescriptionEditButton: false
+      showDescriptionEditButton: false,
+      isEditingTitle: false,
+      isEditingDescription: false
     };
   },
 
@@ -50,12 +53,6 @@ export default {
         this.$store.dispatch('userInput/setListDescription', { listDescription });
       }
     },
-    isEditingTitle() {
-      return this.$store.getters['userInput/isEditingListTitle'];
-    },
-    isEditingDescription() {
-      return this.$store.getters['userInput/isEditingListDescription'];
-    },
     isSubscribeVisible() {
       const isThisMyList = typeof this.$store.getters.myLists.find(list => list.id === this.$store.getters.urlString) !== 'undefined';
       return  !isThisMyList && !this.isEditingTitle;
@@ -63,23 +60,39 @@ export default {
   },
 
   methods: {
+
     setIsEditingListTitle(isEditing) {
-      this.$store.dispatch('userInput/setIsEditingListTitle', { isEditing });
+      this.isEditingTitle = isEditing;
 
       if (isEditing) {
         this.$nextTick(() => { // See https://forum.vuejs.org/t/how-to-set-focus-to-input/10672/8
           this.$refs.linkTitle.focus();
         });
       }
+
+      Analytics.FireFeatureUsed('edit_title', isEditing ? 'true' : 'false');
     },
+
     setIsEditingListDescription(isEditing) {
-      this.$store.dispatch('userInput/setIsEditingListDescription', { isEditing });
+      this.isEditingDescription = isEditing;
 
       if (isEditing) {
         this.$nextTick(() => { // See https://forum.vuejs.org/t/how-to-set-focus-to-input/10672/8
           this.$refs.linkDescription.focus();
         });
       }
+
+      Analytics.FireFeatureUsed('edit_description', isEditing ? 'true' : 'false');
+    },
+
+    saveListTitle() {
+      this.isEditingTitle = false;
+      this.$store.dispatch('syncToFirebase');
+    },
+
+    saveListDescription() {
+      this.isEditingDescription = false;
+      this.$store.dispatch('syncToFirebase');
     },
 
     /**

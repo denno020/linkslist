@@ -1,6 +1,6 @@
 /*
  *  Links List - Create a list of links, and then share it!
- *  Copyright (c) 2019 Luke Denton
+ *  Copyright (c) Luke Denton
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -30,6 +30,7 @@
     padding: 0;
     margin: 0;
     width: 100%;
+    background-color: inherit;
 }
 
 .empty-links-list {

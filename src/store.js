@@ -1,6 +1,6 @@
 /*
  *  Links List - Create a list of links, and then share it!
- *  Copyright (c) 2019 Luke Denton
+ *  Copyright (c) Luke Denton
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,6 +22,8 @@ import modules from './modules';
 import appConfig from '../application-configuration';
 import DataStore from "./utils/DataStore";
 import { ALERT_INFO } from "./constants";
+import { syncFirebaseDB } from "./utils/NetworkCalls";
+import validateCookiesAccepted from "./store/validateCookiesAccepted";
 
 Vue.use(Vuex);
 
@@ -77,9 +79,6 @@ export default new Vuex.Store({
       dispatch('ui/setUi', ui);
       dispatch('userInput/setMeta', meta);
 
-      // Accessing commit directly as the action has a call to syncFirebaseDB, which will cause cyclical calls
-      commit('alerts/isPaypalMeVisible', !isPaypalMeDismissed);
-
       dispatch('setAreLinksLoading', { isLoading: false });
     },
 
@@ -87,9 +86,12 @@ export default new Vuex.Store({
       const { isLoading } = payload;
       commit('areLinksLoading', isLoading);
 
-    }
-  },
+    },
 
+    syncToFirebase: (...params) => validateCookiesAccepted(...params, () => {
+      syncFirebaseDB();
+    })
+  },
   /**
    * These are used to ensure all components get the same data, even if that data needs to be modified before being
    * returned to the component

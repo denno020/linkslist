@@ -1,6 +1,6 @@
 <!--
   -  Links List - Create a list of links, and then share it!
-  -  Copyright (c) 2019 Luke Denton
+  -  Copyright (c) Luke Denton
   -
   -  This program is free software: you can redistribute it and/or modify
   -  it under the terms of the GNU General Public License as published by
@@ -75,4 +75,4 @@
 </template>
 
 <script src="./Card.js"></script>
-<style src="./Card.css"></style>
+<style lang="scss" src="./Card.scss"></style>

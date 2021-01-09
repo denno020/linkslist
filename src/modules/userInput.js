@@ -1,6 +1,6 @@
 /*
  *  Links List - Create a list of links, and then share it!
- *  Copyright (c) 2019 Luke Denton
+ *  Copyright (c) Luke Denton
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,8 +17,7 @@
  */
 
 import LinkParse from '../utils/LinkParser';
-import { syncFirebaseDB } from "../utils/NetworkCalls";
-import Analytics from "../utils/Analytics";
+import validateCookiesAccepted from "../store/validateCookiesAccepted";
 
 /**
  * @typedef {Object} UserInputState
@@ -152,13 +151,11 @@ const actions = {
 
   /**
    * Parse the linkUrl text to find one or multiple links
-   *
-   * @param {Object} module
    */
-  parseLinkUrl({ state, commit }) {
+  parseLinkUrl: (...params) => validateCookiesAccepted(...params, ({ state, commit }) => {
     const links = LinkParse.parse(state.linkUrl);
     commit('setLinks', links);
-  },
+  }),
 
   /**
    * Alias for the setListTitle action below
@@ -205,8 +202,6 @@ const actions = {
   },
 
   /**
-   * @param {Object}   module
-   * @param {function}  module.commit           Function to call mutations on the module
    * @param {Object}   payload
    * @param {string}    payload.listDescription The new description for the list
    *
@@ -215,46 +210,6 @@ const actions = {
   setListDescription({ commit }, payload) {
     const { listDescription } = payload;
     commit('listDescription', listDescription);
-  },
-
-  /**
-   * @param {Object}   module
-   * @param {function}  module.commit     Function to call mutations on the module
-   * @param {Object}   payload
-   * @param {Boolean}   payload.isEditing The new description for the list
-   *
-   * @returns {null}
-   */
-  setIsEditingListTitle({ commit }, payload) {
-    const { isEditing } = payload;
-    commit('isEditingListTitle', isEditing);
-
-    // Assuming that isEditing === false when the user has finished updating the title
-    if (!isEditing) {
-      syncFirebaseDB();
-    }
-
-    Analytics.FireFeatureUsed('edit_title', isEditing ? 'true' : 'false');
-  },
-
-  /**
-   * @param {Object}   module
-   * @param {function}  module.commit     Function to call mutations on the module
-   * @param {Object}   payload
-   * @param {Boolean}   payload.isEditing The new description for the list
-   *
-   * @returns {null}
-   */
-  setIsEditingListDescription({ commit }, payload) {
-    const { isEditing } = payload;
-    commit('isEditingListDescription', isEditing);
-
-    // Assuming that isEditing === false when the user has finished updating the description
-    if (!isEditing) {
-      syncFirebaseDB();
-    }
-
-    Analytics.FireFeatureUsed('edit_description', isEditing ? 'true' : 'false');
   },
 
   /**

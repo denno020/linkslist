@@ -1,6 +1,6 @@
 /*
  *  Links List - Create a list of links, and then share it!
- *  Copyright (c) 2019 Luke Denton
+ *  Copyright (c) Luke Denton
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
 
 import alerts from './alerts';
 import authentication from './authentication';
+import cookies from './cookies';
 import links from './links';
 import ui from './ui';
 import userInput from './userInput';
@@ -27,6 +28,7 @@ import updates from './updates';
 export default {
   alerts,
   authentication,
+  cookies,
   links,
   ui,
   userInput,

@@ -1,6 +1,6 @@
 <!--
   -  Links List - Create a list of links, and then share it!
-  -  Copyright (c) 2020 Luke Denton
+  -  Copyright (c) Luke Denton
   -
   -  This program is free software: you can redistribute it and/or modify
   -  it under the terms of the GNU General Public License as published by
@@ -59,7 +59,12 @@
 
             <v-card v-if="displayCreate">
                 <v-card-title class="justify-center">
-                    <span class="headline">Create Account</span>
+                    <div class="headline">Create Account</div>
+                    <span class="pt-3">
+                        Create an account to keep track of lists that you create, subscribe to lists that other people create, and to enable you to sign up
+                        for premium features when they're released! I'm working on lockable lists, private lists, list permissions, further customization options,
+                        and more! All of which will be available to a premium Links List account holder.
+                    </span>
                 </v-card-title>
                 <v-form @submit.prevent="handleCreateAccount">
                     <v-card-text>

@@ -1,6 +1,6 @@
 /*
  *  Links List - Create a list of links, and then share it!
- *  Copyright (c) 2020 Luke Denton
+ *  Copyright (c) Luke Denton
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -31,6 +31,56 @@
  */
 
 const updates = [
+  {
+    release: '1.6.0',
+    title: 'New Year, New Improvements',
+    slug: 'new-year-new-improvements-1-6-0',
+    displayDate: '9th January 2021',
+    dateStamp: '2021-01-09',
+    author: 'Luke Denton',
+    html: `
+      <h4>Features</h4>
+      <ul>
+        <li>
+          <strong>Title and description now save when field is blurred</strong><br>
+          Previously you had to press the enter key to save the custom title or description. This wasn't the most obvious UX, so it's now been updated so that all you have to do it click/tab out of the editing field, and it will save
+        </li>
+        <li>
+          <strong>Duplicate URL detection</strong><br>
+          Do you have a lot of URL's in your list and aren't sure if you've saved one? Now when you try to add a link, the app will check to make sure it's not already in the list.
+          </li>
+      </ul>
+      <h4>Under the hood</h4>
+      <ul>
+        <li>Fixed the alignment of the loading UI to be at the top of the container, not center</li>
+        <li>Improved the responsive design of the app. It isn't perfect, but it works</li>
+        <li>Removed an odd white bar that was displayed at the bottom of each list item</li>
+        <li>Added cookies acceptance and updated privacy policy</li>
+        <li>Fixed a bug that would show "Links restored from local cache" even when there was nothing actually restored</li>
+      </ul>
+`
+  },
+  {
+    release: '1.5.0',
+    title: 'User Accounts',
+    slug: 'user-accounts-1-5-0',
+    displayDate: '14th September 2020',
+    dateStamp: '2020-09-14',
+    author: 'Luke Denton',
+    html: `
+      <h4>Features</h4>
+      <ul>
+        <li>
+          <strong>User Accounts</strong><br>
+          You can now create an account on Links List! With this account, you'll be able to subscribe to lists (which will
+          store a link to that list within your List Subscriptions), and any list that is created while you're logged in
+          will be associated with your account. Lists associated with your account will be eligible for premium features.<br>
+          Some premium features that I'm working on are; lockable lists, private lists, custom list ID's, customization of links'
+          names/urls, and more!
+        </li>
+      </ul>
+`
+  },
   {
     release: '1.4.0',
     title: 'Landing page, and a couple of features',

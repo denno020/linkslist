@@ -1,3 +1,23 @@
+# 1.6.0
+
+### Features
+
+**Title and description now save when field is blurred**
+
+Previously you had to press the enter key to save the custom title or description. This wasn't the most obvious UX, so it's now been updated so that all you have to do it click/tab out of the editing field, and it will save
+
+**Duplicate URL detection**
+
+Do you have a lot of URL's in your list and aren't sure if you've saved one? Now when you try to add a link, the app will check to make sure it's not already in the list.
+
+### Under the hood
+
+- Fixed the alignment of the loading UI to be at the top of the container, not center
+- Improved the responsive design of the app. It isn't perfect, but it works
+- Removed an odd white bar that was displayed at the bottom of each list item 
+- Added cookies acceptance and updated privacy policy
+- Fixed a bug that would show "Links restored from local cache" even when there was nothing actually restored
+
 # 1.5.0
 
 **User Accounts!**

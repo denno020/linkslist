@@ -1,6 +1,6 @@
 <!--
   -  Links List - Create a list of links, and then share it!
-  -  Copyright (c) 2020 Luke Denton
+  -  Copyright (c) Luke Denton
   -
   -  This program is free software: you can redistribute it and/or modify
   -  it under the terms of the GNU General Public License as published by
@@ -323,7 +323,7 @@
         <div class="container">
           <div class="row">
             <div class="col-md-10 col-md-offset-1 text-center colorlib-heading animate-box">
-              <h2>Already trusted by thousands of users creating over 2.7k lists!</h2>
+              <h2>Already trusted by thousands of users creating over 4.3k lists!</h2>
               <p>Subscribe to receive Links List tips and updates right to your inbox.</p>
             </div>
           </div>

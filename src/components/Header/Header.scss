@@ -1,0 +1,88 @@
+/*!
+ *  Links List - Create a list of links, and then share it!
+ *  Copyright (c) Luke Denton
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.app-header {
+    padding-bottom: 48px;
+
+    @media (min-width: 451px) {
+        padding-top: 48px;
+    }
+}
+
+.app-header__title {
+    @media (max-width: 450px) {
+        padding-top: 10px;
+    }
+}
+
+.app-header__title-heading {
+    position: relative;
+    display: inline-block;
+}
+
+.app-header__title-heading--editor {
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+}
+
+.app-header__subtitle-description {
+    position: relative;
+    display: inline-block;
+}
+
+.app-header__subtitle-description--editor {
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+}
+
+.app-header__actions {
+    display: flex;
+    justify-content: space-between;
+
+    @media (max-width: 367px) {
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    @media (min-width: 451px) {
+        position: absolute;
+        top: 10px;
+        left: 24px;
+        right: 24px;
+    }
+}
+
+.subscription-button {
+    span {
+        vertical-align: middle;
+
+        &:first-child {
+            margin-right: 4px; // Matches distance between User account and drop down arrow
+        }
+    }
+}
+
+.app-header__login-container {
+    margin-left: auto; /* Push to the right edge when a user isn't logged in, and therefore there isn't a Subscribe button */
+
+    @media (max-width: 367px) {
+        margin: inherit;
+    }
+}

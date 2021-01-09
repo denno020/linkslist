@@ -1,6 +1,6 @@
 /*
  *  Links List - Create a list of links, and then share it!
- *  Copyright (c) 2019 Luke Denton
+ *  Copyright (c) Luke Denton
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -46,18 +46,18 @@ const devFirebase = {
 export default {
   isLive,
   ...isLive && { // is production
-    projectUrl: 'https://linkslist.app/'
+    projectUrl: '{Enter production URL}'
   } || { // is development
     projectUrl: 'http://localhost:8080/'
   },
 
   ...isLive && { // is production
-    cloudFunctionsUrl: 'https://us-central1-linkslist-42239.cloudfunctions.net'
+    cloudFunctionsUrl: '{Enter cloud functions URL}'
   } || { // is development
-    cloudFunctionsUrl: 'http://localhost:5000/linkslist-42239/us-central1'
+    cloudFunctionsUrl: 'http://localhost:5000/{Enter projectID}/us-central1'
   },
 
   /** @var {FirebaseConfig} firebase */
   firebase: (isLive) ? productionFirebase : devFirebase,
-  version: '1.2.1'
+  version: '1.6.0'
 };

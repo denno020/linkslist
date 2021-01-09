@@ -1,6 +1,6 @@
 <!--
   -  Links List - Create a list of links, and then share it!
-  -  Copyright (c) 2019 Luke Denton
+  -  Copyright (c) Luke Denton
   -
   -  This program is free software: you can redistribute it and/or modify
   -  it under the terms of the GNU General Public License as published by
@@ -22,18 +22,18 @@
       <div class="version" itemprop="softwareVersion">
         <a class="white--text" href="https://github.com/denno020/linkslist/blob/master/CHANGELOG.md" target="_blank" rel="nofollow noopener">Version {{this.applicationVersion}}</a>
       </div>
-        <div class="privacy-policy-link-container pl-2">
-            <PrivacyDialog />
-        </div>
-        <div class="privacy-policy-link-container pl-2">
-            <TermsDialog />
-        </div>
+      <div class="privacy-policy-link-container">
+          <PrivacyDialog />
+      </div>
+      <div class="privacy-policy-link-container">
+          <TermsDialog />
+      </div>
     </v-layout>
     <v-layout xs-6 justify-center class="contact">
       Suggestions or issues? <a class="white--text pl-1" target="_blank" href="https://github.com/denno020/linkslist/issues/new" rel="nofollow noopener">Please open a GitHub Issue</a>
     </v-layout>
     <v-layout xs-3 justify-end class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="email" content="linkslistapp@gmail.com">
+      <meta itemprop="email" content="luke@linkslist.app">
       <span class="author-name" @click="showPaypalMeSnackbar">
         Links List created by <span itemprop="name">Luke Denton</span>
       </span>
@@ -42,4 +42,4 @@
 </template>
 
 <script src="./Footer.js"></script>
-<style src="./Footer.css"></style>
+<style lang="scss" src="./Footer.scss"></style>

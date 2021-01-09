@@ -1,6 +1,6 @@
 /*
  *  Links List - Create a list of links, and then share it!
- *  Copyright (c) 2019 Luke Denton
+ *  Copyright (c) Luke Denton
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -46,8 +46,10 @@ if (appConfig.isLive) {
   Vue.use(VueBugsnag);
 }
 
+store.dispatch('checkIfCookiesAllowed');
+
 auth.onAuthStateChanged((user) => {
-  if (!user) {
+  if (!user || !store.getters.areCookiesAccepted) {
     store.dispatch('user', { user: false });
     return;
   }
@@ -62,6 +64,15 @@ auth.onAuthStateChanged((user) => {
     };
 
     store.dispatch('user', { user: linksListUser });
+
+    // Get billing information for the user from Stripe
+    // This was accidentally committed earlier (because of cherry picking), but I can't delete it, as I'm worried that when I finally
+    // merge the billing work into the production branch, the commit to remove this line will overwrite the earlier commit that added it (in preproduction)
+    // Therefore, by commenting it out, hopefully I'll force a merge conflict or something, so I can properly handle it
+    // store.dispatch('getUserBilling');
+
+    // @TODO Look at breaking the following Firebase listeners out of this callback, so we can change the event listener on the users table from once to one
+    // We want to do this so that when a user signs up for a premium account, we automatically get the changed details from Firebase into the application
 
     // There are saved lists, so set up listeners to handle when a list is subscribed to, but more importantly when an
     // list is unsubscribed from
@@ -97,10 +108,12 @@ auth.onAuthStateChanged((user) => {
 
 // @TODO This probably needs to be updated to run a regex pattern over the location.pathname, using `.some()`, as we'll also need to account for /update/some-update-name
 const urlHasListId = !['/', '/app', '/updates'].includes(location.pathname);
-if (urlHasListId) {
-  store.dispatch('setAreLinksLoading', { isLoading: true });
-} else {
-  store.dispatch('checkAndHydrateFromLocalStorage');
+if (store.getters.areCookiesAccepted) {
+  if (urlHasListId) {
+    store.dispatch('setAreLinksLoading', { isLoading: true });
+  } else {
+    store.dispatch('checkAndHydrateFromLocalStorage');
+  }
 }
 
 new Vue({

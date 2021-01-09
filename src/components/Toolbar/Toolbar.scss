@@ -1,6 +1,6 @@
 /*
  *  Links List - Create a list of links, and then share it!
- *  Copyright (c) 2019 Luke Denton
+ *  Copyright (c) Luke Denton
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -18,16 +18,32 @@
 
 .toolbar {
     position: relative; // For positioning the colour swatches
+
+    @media (max-width: 450px) {
+        flex-wrap: wrap;
+    }
 }
 
 .toolbar__left {
-
+    @media (max-width: 450px) {
+        flex: 1 1 50%;
+        order: 1;
+        max-width: inherit;
+    }
 }
 
 .toolbar__middle {
-
+    @media (max-width: 450px) {
+        flex: 1 1 100%;
+        order: 3;
+        max-width: inherit;
+    }
 }
 
 .toolbar__right {
-
+    @media (max-width: 450px) {
+        flex: 1 1 50%;
+        order: 2;
+        max-width: inherit;
+    }
 }

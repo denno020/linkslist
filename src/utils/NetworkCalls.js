@@ -1,6 +1,6 @@
 /*
  *  Links List - Create a list of links, and then share it!
- *  Copyright (c) 2019 Luke Denton
+ *  Copyright (c) Luke Denton
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -87,7 +87,13 @@ export const getUrlData = async (url) => {
  * @returns {Promise}
  */
 export const syncFirebaseDB = async () => {
-  const getters = store.getters;
+  const { dispatch, getters } = store;
+
+  if (!getters.areCookiesAccepted) {
+    dispatch('displayCookiesError');
+    return;
+  }
+
   const data = store.getters['getStateToPersist'];
   const { urlString } = getters;
 

@@ -1,6 +1,6 @@
 <!--
   -  Links List - Create a list of links, and then share it!
-  -  Copyright (c) 2019 Luke Denton
+  -  Copyright (c) Luke Denton
   -
   -  This program is free software: you can redistribute it and/or modify
   -  it under the terms of the GNU General Public License as published by
@@ -18,13 +18,13 @@
 
 <template>
   <v-layout shrink wrap class="toolbar">
-    <v-flex xs4 md4 class="toolbar__left">
+    <v-flex xs4 class="toolbar__left">
       <slot name="left"></slot>
     </v-flex>
-    <v-flex xs4 md4 class="toolbar__middle">
+    <v-flex xs4 class="toolbar__middle">
       <slot name="middle"></slot>
     </v-flex>
-    <v-flex xs4 md4 class="toolbar__right">
+    <v-flex xs4 class="toolbar__right">
       <slot name="right"></slot>
     </v-flex>
   </v-layout>

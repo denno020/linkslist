@@ -1,6 +1,6 @@
 <!--
   -  Links List - Create a list of links, and then share it!
-  -  Copyright (c) 2019 Luke Denton
+  -  Copyright (c) Luke Denton
   -
   -  This program is free software: you can redistribute it and/or modify
   -  it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
 
 <template>
   <v-app>
+    <CookiesNotice />
     <Header />
     <Alerts />
     <v-content>
@@ -54,7 +55,7 @@
             </template>
           </Toolbar>
 
-          <v-layout justify-center :align-start="links.length > 0" :align-center="links.length === 0">
+          <v-layout justify-center :align-start="links.length > 0 || $store.getters.areLinksLoading" :align-center="links.length === 0 && !$store.getters.areLinksLoading">
 
             <v-list v-if="$store.getters.areLinksLoading" expand class="links-list">
               <Card class="mb-3" skeleton/>

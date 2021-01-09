@@ -1,6 +1,6 @@
 <!--
   -  Links List - Create a list of links, and then share it!
-  -  Copyright (c) 2020 Luke Denton
+  -  Copyright (c) Luke Denton
   -
   -  This program is free software: you can redistribute it and/or modify
   -  it under the terms of the GNU General Public License as published by
@@ -68,7 +68,7 @@
           <div class="col-md-3 colorlib-widget">
             <h4>Contact Info</h4>
             <ul class="colorlib-footer-links">
-              <li><a href="mailto:linkslistapp@gmail.com"><i class="icon-envelope"></i> linkslistapp@gmail.com</a></li>
+              <li><a href="mailto:luke@linkslist.app"><i class="icon-envelope"></i> luke@linkslist.app</a></li>
               <li>
                 <router-link to="/"><i class="icon-location4"></i> linkslist.app</router-link>
               </li>

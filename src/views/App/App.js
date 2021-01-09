@@ -1,6 +1,6 @@
 /*
  *  Links List - Create a list of links, and then share it!
- *  Copyright (c) 2019 Luke Denton
+ *  Copyright (c) Luke Denton
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ import HowToUseDialog from "@/components/HowToUseDialog";
 import PayPalMe from "@/components/PayPalMe";
 import Toolbar from "@/components/Toolbar";
 import ViewContainer from "@/components/ViewContainer";
+import CookiesNotice from "@/components/CookiesNotice";
 import { listenForListChange } from './../../utils/FirebaseListeners';
 
 export default {
@@ -35,6 +36,7 @@ export default {
     Card,
     ChangeTheme,
     ColourSwatches,
+    CookiesNotice,
     FAQ,
     Footer,
     GetLink,
@@ -50,6 +52,15 @@ export default {
    */
   mounted() {
     const urlString = this.$store.getters.urlString;
+
+    /**
+     * When a user accepts the cookies, the page will refresh, which will then jump over this check and
+     * actually load a list from Firebase
+     */
+    if (!this.$store.getters.areCookiesAccepted) {
+      return false;
+    }
+
     if (urlString && urlString !== '') {
       listenForListChange(urlString);
     }

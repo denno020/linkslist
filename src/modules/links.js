@@ -1,6 +1,6 @@
 /*
  *  Links List - Create a list of links, and then share it!
- *  Copyright (c) 2019 Luke Denton
+ *  Copyright (c) Luke Denton
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,6 +17,9 @@
  */
 
 import { getUrlData, syncFirebaseDB } from '../utils/NetworkCalls';
+import validateCookiesAccepted from "../store/validateCookiesAccepted";
+import { ALERT_INFO } from "../constants";
+import { areUrlsTheSame } from '../utils/compare-urls';
 
 /**
  * Initial state
@@ -120,7 +123,7 @@ const mutations = {
 
 /**
  * Actions for updating this piece of state
- * Can contain asyncronous actions
+ * Can contain asynchronous actions
  *
  * @type {Object}
  */
@@ -128,16 +131,22 @@ const actions = {
 
   /**
    * Add a new link
-   *
-   * @param {Object} module The slice of state within this module
-   *
-   * @returns {null}
    */
-  addToLinks({ rootState, state, commit, dispatch }) {
+  addToLinks: (...params) => validateCookiesAccepted(...params, ({ rootGetters, getters, state, commit, dispatch }) => {
     dispatch('userInput/clearLinkUrl');
 
+    // Filter any URL's that are already in the users list
+    const newUrls = rootGetters['userInput/links'].filter((newUrl) => {
+      if (getters.links.some((link) => areUrlsTheSame(link.url, newUrl.value))) {
+        dispatch('alerts/displayAlert', { type: ALERT_INFO, message: `${newUrl.value} already in list` })
+        return false;
+      }
+
+      return newUrl;
+    });
+
     // For each of the parsed links, get it's data and add to the links array
-    rootState.userInput.links.forEach((link) => {
+    newUrls.forEach((link) => {
       const { value: url } = link;
       const { nextId } = state;
 
@@ -154,7 +163,7 @@ const actions = {
 
     // Now that we've finished looping, the links are now stored in their permanent home, so the temporary links array can be cleared
     dispatch('userInput/clearLinks');
-  },
+  }),
 
   /**
    * Fetch the data of a URL
@@ -184,22 +193,17 @@ const actions = {
 
   /**
    * Remove a link from the links array
-   *
-   * @param {Object} module The slice of state within this module
-   * @param {int}    id     The ID of the link to remove
-   *
-   * @returns {null}
    */
-  removeLink({ commit, dispatch }, id) {
+  removeLink: (...params) => validateCookiesAccepted(...params, ({ commit, dispatch }, id) => {
     commit('removeFromLinks', { id });
 
     dispatch('syncDb');
-  },
+  }),
 
   /**
    * Trigger cloud function that will sync the DB with the current state of the list
    */
-  syncDb({ rootGetters }) {
+  syncDb({ rootGetters, dispatch }) {
     const links = rootGetters.links;
 
     // Make sure that all links in the array have their meta data set before syncing to Firebase
@@ -209,7 +213,7 @@ const actions = {
       return;
     }
 
-    syncFirebaseDB();
+    dispatch('syncToFirebase');
   },
 
   /**

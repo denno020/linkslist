@@ -1,6 +1,6 @@
 <!--
   -  Links List - Create a list of links, and then share it!
-  -  Copyright (c) 2019 Luke Denton
+  -  Copyright (c) Luke Denton
   -
   -  This program is free software: you can redistribute it and/or modify
   -  it under the terms of the GNU General Public License as published by
@@ -17,13 +17,19 @@
   -->
 
 <template>
-    <header class="app-header pt-5 pb-5 text-xs-center">
+    <header class="app-header text-xs-center">
         <div class="app-header__actions">
             <div v-if="this.$store.getters.isLoggedIn && this.$store.getters.urlString"
                  class="app-header__subscribe-container">
-                <v-btn :color="this.$store.getters['ui/theme']" flat v-if="isSubscribeVisible" @click="handleListSubscription" title="Subscribing to this list will store a link to it in your List Subscriptions panel!">
-                    <span v-if="this.$store.getters.isSubscribed"><v-icon :color="this.$store.getters['ui/theme']">star</v-icon> Unsubscribe</span>
-                    <span v-else> <v-icon :color="this.$store.getters['ui/theme']">star_border</v-icon> Subscribe</span>
+                <v-btn class="subscription-button" :color="this.$store.getters['ui/theme']" flat v-if="isSubscribeVisible" @click="handleListSubscription" title="Subscribing to this list will store a link to it in your List Subscriptions panel!">
+                    <span>
+                        <v-icon v-if="this.$store.getters.isSubscribed" :color="this.$store.getters['ui/theme']">star</v-icon>
+                        <v-icon v-else :color="this.$store.getters['ui/theme']">star_border</v-icon>
+                    </span>
+                    <span>
+                        <span v-if="this.$store.getters.isSubscribed">Unsubscribe</span>
+                        <span v-else>Subscribe</span>
+                    </span>
                 </v-btn>
             </div>
             <div class="app-header__login-container">
@@ -40,7 +46,8 @@
                 ref="linkTitle"
                 v-else
                 v-model="listTitle"
-                @keyup.enter="setIsEditingListTitle(false)"
+                @keyup.enter="saveListTitle()"
+                @blur="saveListTitle()"
                 class="app-header__title-heading--editor display-2 font-weight-thin"
             />
 
@@ -54,7 +61,8 @@
                 ref="linkDescription"
                 v-else
                 v-model="listDescription"
-                @keyup.enter="setIsEditingListDescription(false)"
+                @keyup.enter="saveListDescription()"
+                @blur="saveListDescription()"
                 class="app-header__subtitle-description--editor font-weight-light subheading"
             />
         </div>
@@ -62,4 +70,4 @@
 </template>
 
 <script src="./Header.js"></script>
-<style scoped src="./Header.css"></style>
+<style scoped lang="scss" src="./Header.scss"></style>

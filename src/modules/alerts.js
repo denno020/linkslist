@@ -1,6 +1,6 @@
 /*
  *  Links List - Create a list of links, and then share it!
- *  Copyright (c) 2019 Luke Denton
+ *  Copyright (c) Luke Denton
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 import { ALERT_SUCCESS, ALERT_ERROR, ALERT_INFO, ALERT_WARNING } from '../constants';
-import { syncFirebaseDB } from "../utils/NetworkCalls";
+import Storage from "../utils/Storage";
 
 /**
  * Initial state
@@ -54,7 +54,7 @@ const state = {
     [ALERT_WARNING]: '',
     [ALERT_INFO]: ''
   },
-  isPaypalMeVisible: true
+  isPaypalMeVisible: !Storage.getItem('paypal_me_dismissed')
 };
 
 /**
@@ -122,9 +122,11 @@ const actions = {
     const { type, message, timeout = 3000 } = payload;
     commit('displayAlert', { type, message });
 
-    window.setTimeout(() => {
-      dispatch('hideAlert', { type });
-    }, timeout);
+    if (timeout > 0) {
+      window.setTimeout(() => {
+        dispatch('hideAlert', { type });
+      }, timeout);
+    }
   },
 
   /**
@@ -147,7 +149,7 @@ const actions = {
   setIsPaypalMeVisible({ commit }, payload) {
     const { isVisible } = payload;
     commit('isPaypalMeVisible', isVisible);
-    syncFirebaseDB();
+    Storage.setItem('paypal_me_dismissed', true);
   }
 };
 
